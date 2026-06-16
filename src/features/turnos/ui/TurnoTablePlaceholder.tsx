@@ -1,20 +1,36 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/shared/components/tables";
+import { TableRowActions } from "@/shared/components/layout/TableRowActions";
 import type { Turno } from "../types/turnoType";
 
 interface TurnoTablePlaceholderProps {
   data: Turno[];
+  onEdit: (item: Turno) => void;
+  onDelete: (item: Turno) => void;
 }
 
-const columns: ColumnDef<Turno>[] = [
-  { accessorKey: "id", header: "ID" },
-  { accessorKey: "nombre", header: "Nombre" },
-  { accessorKey: "horaInicio", header: "Hora inicio" },
-  { accessorKey: "horaFin", header: "Hora fin" },
-];
+export const TurnoTablePlaceholder = ({
+  data,
+  onEdit,
+  onDelete,
+}: TurnoTablePlaceholderProps) => {
+  const columns: ColumnDef<Turno>[] = [
+    { accessorKey: "id", header: "ID" },
+    { accessorKey: "nombre", header: "Nombre" },
+    { accessorKey: "horaInicio", header: "Hora inicio" },
+    { accessorKey: "horaFin", header: "Hora fin" },
+    {
+      id: "acciones",
+      header: "Acciones",
+      cell: ({ row }) => (
+        <TableRowActions
+          onEdit={() => onEdit(row.original)}
+          onDelete={() => onDelete(row.original)}
+        />
+      ),
+    },
+  ];
 
-/** Componente de negocio del modulo Turnos. */
-export const TurnoTablePlaceholder = ({ data }: TurnoTablePlaceholderProps) => {
   return (
     <DataTable
       data={data}

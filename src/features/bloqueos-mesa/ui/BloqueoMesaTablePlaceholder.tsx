@@ -1,32 +1,47 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/shared/components/tables";
-import { formatDate } from "@/shared/utils/formatDate";
+import { TableRowActions } from "@/shared/components/layout/TableRowActions";
 import type { BloqueoMesa } from "../types/bloqueoMesaType";
 
 interface BloqueoMesaTablePlaceholderProps {
   data: BloqueoMesa[];
+  onEdit: (item: BloqueoMesa) => void;
+  onDelete: (item: BloqueoMesa) => void;
 }
 
-const columns: ColumnDef<BloqueoMesa>[] = [
-  { accessorKey: "id", header: "ID" },
-  { accessorKey: "mesaId", header: "Mesa" },
-  {
-    accessorKey: "fechaInicio",
-    header: "Inicio",
-    cell: (info) => formatDate(info.getValue<string>()),
-  },
-  {
-    accessorKey: "fechaFin",
-    header: "Fin",
-    cell: (info) => formatDate(info.getValue<string>()),
-  },
-  { accessorKey: "motivo", header: "Motivo" },
-];
-
-/** Componente de negocio del modulo Bloqueos de Mesa. */
 export const BloqueoMesaTablePlaceholder = ({
   data,
+  onEdit,
+  onDelete,
 }: BloqueoMesaTablePlaceholderProps) => {
+  const columns: ColumnDef<BloqueoMesa>[] = [
+    { accessorKey: "id", header: "ID" },
+    { accessorKey: "mesaId", header: "Mesa" },
+    {
+      accessorKey: "fechaInicio",
+      header: "Inicio",
+      cell: ({ getValue }) =>
+        new Date(getValue<string>()).toLocaleString("es-CR"),
+    },
+    {
+      accessorKey: "fechaFin",
+      header: "Fin",
+      cell: ({ getValue }) =>
+        new Date(getValue<string>()).toLocaleString("es-CR"),
+    },
+    { accessorKey: "motivo", header: "Motivo" },
+    {
+      id: "acciones",
+      header: "Acciones",
+      cell: ({ row }) => (
+        <TableRowActions
+          onEdit={() => onEdit(row.original)}
+          onDelete={() => onDelete(row.original)}
+        />
+      ),
+    },
+  ];
+
   return (
     <DataTable
       data={data}

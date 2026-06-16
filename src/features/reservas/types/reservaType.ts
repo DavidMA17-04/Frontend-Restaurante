@@ -9,3 +9,6 @@ export interface Reserva {
   fecha: string;
   estado: string;
 }
+
+export type ReservaCreateInput = Omit<Reserva, "id">;
+export type ReservaUpdateInput = Partial<ReservaCreateInput>;

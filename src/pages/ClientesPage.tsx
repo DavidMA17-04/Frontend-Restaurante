@@ -1,39 +1,112 @@
 import { Plus } from "lucide-react";
-import { ClienteTablePlaceholder, useGetClientes } from "@/features/clientes";
+import { useMemo, useState } from "react";
+import {
+  ClienteFormModal,
+  ClienteTablePlaceholder,
+  useCreateCliente,
+  useDeleteCliente,
+  useGetClientes,
+  useUpdateCliente,
+} from "@/features/clientes";
+import type {
+  Cliente,
+  ClienteCreateInput,
+} from "@/features/clientes/types/clienteType";
 import {
   AlertMessage,
   Loader,
+  MockDataBanner,
   PageHeader,
 } from "@/shared/components/feedback";
-import { Button } from "@/shared/components/ui/Index";
-import { Card } from "@/shared/components/ui/Card";
+import { PageSectionCard } from "@/shared/components/layout/PageSectionCard";
+import { TableToolbar } from "@/shared/components/layout/TableToolbar";
+import { Button } from "@/shared/components/ui/Button";
+import { filterBySearch } from "@/shared/utils/filterBySearch";
 
-/**
- * Vista demo del modulo Clientes con diseno pulido.
- * Mantiene la arquitectura: page -> hook -> componente de negocio.
- */
+const getMutationErrorMessage = (error: unknown) =>
+  error instanceof Error ? error.message : "Ocurrio un error inesperado.";
+
+/** Vista del modulo Clientes con CRUD completo. */
 export const ClientesPage = () => {
   const { data, isLoading, isError } = useGetClientes();
+  const createMutation = useCreateCliente();
+  const updateMutation = useUpdateCliente();
+  const deleteMutation = useDeleteCliente();
+
+  const [search, setSearch] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<Cliente | null>(null);
+
+  const filteredData = useMemo(
+    () =>
+      filterBySearch(data ?? [], search, ["nombre", "email", "telefono"]),
+    [data, search],
+  );
+
+  const isSaving = createMutation.isPending || updateMutation.isPending;
+  const mutationError =
+    createMutation.error ?? updateMutation.error ?? deleteMutation.error;
+
+  const openCreate = () => {
+    setSelectedItem(null);
+    setModalOpen(true);
+  };
+
+  const openEdit = (item: Cliente) => {
+    setSelectedItem(item);
+    setModalOpen(true);
+  };
+
+  const handleDelete = (item: Cliente) => {
+    if (!window.confirm(`¿Eliminar al cliente "${item.nombre}"?`)) {
+      return;
+    }
+
+    deleteMutation.mutate(item.id);
+  };
+
+  const handleFormSubmit = async (payload: ClienteCreateInput) => {
+    try {
+      if (selectedItem) {
+        await updateMutation.mutateAsync({ id: selectedItem.id, data: payload });
+      } else {
+        await createMutation.mutateAsync(payload);
+      }
+
+      closeModal();
+    } catch {
+      // El error se muestra via mutationError en la UI.
+    }
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelectedItem(null);
+  };
 
   return (
     <section>
       <PageHeader
         title="Clientes"
-        subtitle="Listado de clientes del restaurante. Esta vista servira como referencia visual e integracion futura con el backend."
+        subtitle="Listado de clientes del restaurante. CRUD funcional con datos mock o API segun VITE_USE_MOCK."
         actions={
-          <Button variant="primary" disabled>
+          <Button variant="primary" onClick={openCreate}>
             <Plus className="h-4 w-4" />
             Nuevo cliente
           </Button>
         }
       />
 
-      <AlertMessage
-        variant="info"
-        title="Integracion pendiente"
-        message="Los datos aun no se cargan desde la API. Cuando conectes el backend, activa el hook useGetClientes y este listado mostrara registros reales."
-        className="mb-6"
-      />
+      <MockDataBanner entityName="Clientes" />
+
+      {mutationError && (
+        <AlertMessage
+          variant="error"
+          title="Error en la operacion"
+          message={getMutationErrorMessage(mutationError)}
+          className="mb-6"
+        />
+      )}
 
       {isLoading && <Loader label="Cargando clientes..." />}
 
@@ -47,20 +120,30 @@ export const ClientesPage = () => {
       )}
 
       {!isLoading && !isError && (
-        <Card className="p-0 overflow-hidden">
-          <div className="border-b border-border px-6 py-4">
-            <h2 className="text-sm font-semibold text-slate-900">
-              Listado de clientes
-            </h2>
-            <p className="mt-1 text-sm text-muted">
-              Vista preparada para mostrar nombre, email y telefono.
-            </p>
-          </div>
-          <div className="p-6">
-            <ClienteTablePlaceholder data={data ?? []} />
-          </div>
-        </Card>
+        <PageSectionCard
+          title="Listado de clientes"
+          description="Vista preparada para mostrar nombre, email y telefono."
+        >
+          <TableToolbar
+            searchValue={search}
+            onSearchChange={setSearch}
+            searchPlaceholder="Buscar por nombre, email o telefono..."
+          />
+          <ClienteTablePlaceholder
+            data={filteredData}
+            onEdit={openEdit}
+            onDelete={handleDelete}
+          />
+        </PageSectionCard>
       )}
+
+      <ClienteFormModal
+        open={modalOpen}
+        item={selectedItem}
+        onClose={closeModal}
+        onSubmit={handleFormSubmit}
+        isSubmitting={isSaving}
+      />
     </section>
   );
 };

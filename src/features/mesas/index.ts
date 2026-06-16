@@ -1,4 +1,16 @@
 export { MesaTablePlaceholder } from "./ui/MesaTablePlaceholder";
+export { MesaFormModal } from "./ui/MesaFormModal";
 export { useGetMesas } from "./hooks/useGetMesas";
-export { getMesas, getMesaById } from "./services/mesaService";
-export type { Mesa } from "./types/mesaType";
+export {
+  useCreateMesa,
+  useUpdateMesa,
+  useDeleteMesa,
+} from "./hooks/useMesaMutations";
+export {
+  getMesas,
+  getMesaById,
+  createMesa,
+  updateMesa,
+  deleteMesa,
+} from "./services/mesaService";
+export type { Mesa, MesaCreateInput, MesaUpdateInput } from "./types/mesaType";

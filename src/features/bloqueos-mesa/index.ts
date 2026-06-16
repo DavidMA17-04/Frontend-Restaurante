@@ -1,4 +1,5 @@
 export { BloqueoMesaTablePlaceholder } from "./ui/BloqueoMesaTablePlaceholder";
+export { BloqueoMesaFormModal } from "./ui/BloqueoMesaFormModal";
 export { useGetBloqueosMesa } from "./hooks/useGetBloqueosMesa";
 export {
   getBloqueosMesa,

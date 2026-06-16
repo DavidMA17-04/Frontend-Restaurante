@@ -9,3 +9,6 @@ export interface Mesa {
   zonaId: number;
   estado: string;
 }
+
+export type MesaCreateInput = Omit<Mesa, "id">;
+export type MesaUpdateInput = Partial<MesaCreateInput>;

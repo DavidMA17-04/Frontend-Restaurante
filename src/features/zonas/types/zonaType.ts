@@ -7,3 +7,6 @@ export interface Zona {
   nombre: string;
   descripcion: string;
 }
+
+export type ZonaCreateInput = Omit<Zona, "id">;
+export type ZonaUpdateInput = Partial<ZonaCreateInput>;

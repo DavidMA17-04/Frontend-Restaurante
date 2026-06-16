@@ -1,5 +1,13 @@
 export { Button, Input, AppLink, Card } from "./ui/Index";
+export { Badge } from "./ui/Badge";
+export type { BadgeVariant } from "./ui/Badge";
+export { Modal } from "./ui/Modal";
+export { SearchInput } from "./ui/SearchInput";
 export { FormInput, FormSelect } from "./forms";
 export type { SelectOption } from "./forms";
 export { DataTable } from "./tables";
-export { Loader, EmptyState, AlertMessage, PageHeader } from "./feedback";
+export { Loader, EmptyState, AlertMessage, PageHeader, MockDataBanner } from "./feedback";
+export { StatCard } from "./layout/StatCard";
+export { PageSectionCard } from "./layout/PageSectionCard";
+export { TableToolbar } from "./layout/TableToolbar";
+export { TableRowActions } from "./layout/TableRowActions";

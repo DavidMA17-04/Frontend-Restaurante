@@ -8,3 +8,6 @@ export interface Cliente {
   email: string;
   telefono: string;
 }
+
+export type ClienteCreateInput = Omit<Cliente, "id">;
+export type ClienteUpdateInput = Partial<ClienteCreateInput>;
