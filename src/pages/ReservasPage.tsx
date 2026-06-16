@@ -1,18 +1,36 @@
 import { ReservaTablePlaceholder, useGetReservas } from "@/features/reservas";
+import {
+  AlertMessage,
+  Loader,
+  PageHeader,
+} from "@/shared/components/feedback";
+import { Card } from "@/shared/components/ui/Card";
 
 /** Vista del modulo Reservas. */
 export const ReservasPage = () => {
   const { data, isLoading, isError } = useGetReservas();
 
   return (
-    <section className="page">
-      <h1 className="page__title">Reservas</h1>
-      <p className="page__subtitle">Listado de reservas del restaurante.</p>
+    <section>
+      <PageHeader
+        title="Reservas"
+        subtitle="Listado de reservas del restaurante."
+      />
 
-      {isLoading && <p>Cargando...</p>}
-      {isError && <p className="page__error">Error al cargar reservas.</p>}
+      {isLoading && <Loader label="Cargando reservas..." />}
+      {isError && (
+        <AlertMessage
+          variant="error"
+          message="Error al cargar reservas."
+          className="mb-6"
+        />
+      )}
 
-      <ReservaTablePlaceholder data={data ?? []} />
+      {!isLoading && !isError && (
+        <Card>
+          <ReservaTablePlaceholder data={data ?? []} />
+        </Card>
+      )}
     </section>
   );
 };

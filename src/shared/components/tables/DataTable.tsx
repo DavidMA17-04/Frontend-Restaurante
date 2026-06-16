@@ -4,6 +4,7 @@ import {
   useReactTable,
   type ColumnDef,
 } from "@tanstack/react-table";
+import { EmptyState } from "@/shared/components/feedback";
 
 interface DataTableProps<T> {
   data: T[];
@@ -13,7 +14,6 @@ interface DataTableProps<T> {
 
 /**
  * Tabla generica reutilizable construida sobre TanStack Table.
- * Recibe datos y definicion de columnas; no conoce ningun dominio.
  */
 export const DataTable = <T,>({
   data,
@@ -27,40 +27,51 @@ export const DataTable = <T,>({
   });
 
   if (data.length === 0) {
-    return <p className="data-table__empty">{emptyMessage}</p>;
+    return <EmptyState message={emptyMessage} />;
   }
 
   return (
-    <div className="table-container">
-      <table className="data-table">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-sm">
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-border">
+          <thead className="bg-slate-50">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500"
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody className="divide-y divide-border">
+            {table.getRowModel().rows.map((row) => (
+              <tr
+                key={row.id}
+                className="transition-colors hover:bg-slate-50/80"
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    key={cell.id}
+                    className="px-4 py-3 text-sm text-slate-700"
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

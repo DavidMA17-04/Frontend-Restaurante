@@ -1,18 +1,36 @@
 import { TurnoTablePlaceholder, useGetTurnos } from "@/features/turnos";
+import {
+  AlertMessage,
+  Loader,
+  PageHeader,
+} from "@/shared/components/feedback";
+import { Card } from "@/shared/components/ui/Card";
 
 /** Vista del modulo Turnos. */
 export const TurnosPage = () => {
   const { data, isLoading, isError } = useGetTurnos();
 
   return (
-    <section className="page">
-      <h1 className="page__title">Turnos</h1>
-      <p className="page__subtitle">Listado de turnos de trabajo.</p>
+    <section>
+      <PageHeader
+        title="Turnos"
+        subtitle="Listado de turnos de trabajo."
+      />
 
-      {isLoading && <p>Cargando...</p>}
-      {isError && <p className="page__error">Error al cargar turnos.</p>}
+      {isLoading && <Loader label="Cargando turnos..." />}
+      {isError && (
+        <AlertMessage
+          variant="error"
+          message="Error al cargar turnos."
+          className="mb-6"
+        />
+      )}
 
-      <TurnoTablePlaceholder data={data ?? []} />
+      {!isLoading && !isError && (
+        <Card>
+          <TurnoTablePlaceholder data={data ?? []} />
+        </Card>
+      )}
     </section>
   );
 };

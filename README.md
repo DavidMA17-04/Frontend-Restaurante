@@ -5,7 +5,7 @@ Consume una API REST desarrollada en ASP.NET Core.
 
 ## Stack
 
-React + TypeScript, Vite, React Router, Axios, TanStack Query y TanStack Table.
+React + TypeScript, Vite, React Router, Axios, TanStack Query, TanStack Table y **Tailwind CSS v4**.
 
 ## Requisitos
 

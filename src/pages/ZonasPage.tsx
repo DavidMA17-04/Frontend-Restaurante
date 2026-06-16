@@ -1,18 +1,36 @@
 import { ZonaTablePlaceholder, useGetZonas } from "@/features/zonas";
+import {
+  AlertMessage,
+  Loader,
+  PageHeader,
+} from "@/shared/components/feedback";
+import { Card } from "@/shared/components/ui/Card";
 
 /** Vista del modulo Zonas. */
 export const ZonasPage = () => {
   const { data, isLoading, isError } = useGetZonas();
 
   return (
-    <section className="page">
-      <h1 className="page__title">Zonas</h1>
-      <p className="page__subtitle">Listado de zonas del restaurante.</p>
+    <section>
+      <PageHeader
+        title="Zonas"
+        subtitle="Listado de zonas del restaurante."
+      />
 
-      {isLoading && <p>Cargando...</p>}
-      {isError && <p className="page__error">Error al cargar zonas.</p>}
+      {isLoading && <Loader label="Cargando zonas..." />}
+      {isError && (
+        <AlertMessage
+          variant="error"
+          message="Error al cargar zonas."
+          className="mb-6"
+        />
+      )}
 
-      <ZonaTablePlaceholder data={data ?? []} />
+      {!isLoading && !isError && (
+        <Card>
+          <ZonaTablePlaceholder data={data ?? []} />
+        </Card>
+      )}
     </section>
   );
 };
