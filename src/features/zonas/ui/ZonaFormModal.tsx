@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { FormInput } from "@/shared/components/forms";
+import { FormInput, FormSelect } from "@/shared/components/forms";
 import { Button } from "@/shared/components/ui/Button";
 import { Modal } from "@/shared/components/ui/Modal";
 import type { Zona, ZonaCreateInput } from "../types/zonaType";
@@ -12,9 +12,9 @@ interface ZonaFormModalProps {
   isSubmitting?: boolean;
 }
 
-const emptyForm: ZonaCreateInput = {
+const emptyForm = {
   nombre: "",
-  descripcion: "",
+  disponibilidad: "true",
 };
 
 /** Modal de crear/editar zona. */
@@ -32,7 +32,7 @@ export const ZonaFormModal = ({
     if (item) {
       setForm({
         nombre: item.nombre,
-        descripcion: item.descripcion,
+        disponibilidad: String(item.disponibilidad),
       });
     } else {
       setForm(emptyForm);
@@ -48,7 +48,7 @@ export const ZonaFormModal = ({
 
     onSubmit({
       nombre: form.nombre.trim(),
-      descripcion: form.descripcion.trim(),
+      disponibilidad: form.disponibilidad === "true",
     });
   };
 
@@ -82,13 +82,17 @@ export const ZonaFormModal = ({
             setForm((prev) => ({ ...prev, nombre: event.target.value }))
           }
         />
-        <FormInput
-          id="zona-descripcion"
-          label="Descripcion"
-          value={form.descripcion}
+        <FormSelect
+          id="zona-disponibilidad"
+          label="Disponibilidad"
+          value={form.disponibilidad}
           onChange={(event) =>
-            setForm((prev) => ({ ...prev, descripcion: event.target.value }))
+            setForm((prev) => ({ ...prev, disponibilidad: event.target.value }))
           }
+          options={[
+            { value: "true", label: "Disponible" },
+            { value: "false", label: "No disponible" },
+          ]}
         />
       </form>
     </Modal>

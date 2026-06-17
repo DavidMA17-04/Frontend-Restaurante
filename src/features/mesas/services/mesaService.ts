@@ -55,9 +55,15 @@ export const updateMesa = async ({
   return resolveMockOrMutate(
     () => mesasStore.update(id, data),
     async () => {
+      const current = await getMesaById(id);
+      const payload: MesaCreateInput = {
+        numero: data.numero ?? current.numero,
+        capacidad: data.capacidad ?? current.capacidad,
+        zonaId: data.zonaId ?? current.zonaId,
+      };
       const response = await axiosInstance.put<Mesa>(
         `${API_ENDPOINTS.mesas}/${id}`,
-        data,
+        payload,
       );
       return response.data;
     },

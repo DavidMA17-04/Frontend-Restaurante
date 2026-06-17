@@ -17,8 +17,9 @@ export const ClienteTablePlaceholder = ({
   const columns: ColumnDef<Cliente>[] = [
     { accessorKey: "id", header: "ID" },
     { accessorKey: "nombre", header: "Nombre" },
-    { accessorKey: "email", header: "Email" },
+    { accessorKey: "apellido", header: "Apellido" },
     { accessorKey: "telefono", header: "Telefono" },
+    { accessorKey: "cedula", header: "Cedula" },
     {
       id: "acciones",
       header: "Acciones",
@@ -35,7 +36,7 @@ export const ClienteTablePlaceholder = ({
     <DataTable
       data={data}
       columns={columns}
-      emptyMessage="Aun no hay clientes. La integracion con el backend se realizara en la siguiente etapa."
+      emptyMessage="Aun no hay clientes registrados."
     />
   );
 };

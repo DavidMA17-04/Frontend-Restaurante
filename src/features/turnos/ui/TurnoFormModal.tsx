@@ -1,23 +1,37 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { FormInput } from "@/shared/components/forms";
+import { FormInput, FormSelect } from "@/shared/components/forms";
 import { Button } from "@/shared/components/ui/Button";
 import { Modal } from "@/shared/components/ui/Modal";
-import type { Turno } from "../types/turnoType";
+import type { Turno, TurnoCreateInput } from "../types/turnoType";
 
 interface TurnoFormModalProps {
   open: boolean;
   item: Turno | null;
   onClose: () => void;
+  onSubmit: (data: TurnoCreateInput) => void;
+  isSubmitting?: boolean;
 }
 
 const emptyForm = {
   nombre: "",
   horaInicio: "",
   horaFin: "",
+  activo: "true",
 };
 
-/** Modal de crear/editar turno (solo UI). */
-export const TurnoFormModal = ({ open, item, onClose }: TurnoFormModalProps) => {
+const toApiTime = (time: string) =>
+  time.length === 5 ? `${time}:00` : time;
+
+const fromApiTime = (time: string) => time.slice(0, 5);
+
+/** Modal de crear/editar turno. */
+export const TurnoFormModal = ({
+  open,
+  item,
+  onClose,
+  onSubmit,
+  isSubmitting = false,
+}: TurnoFormModalProps) => {
   const isEditing = item !== null;
   const [form, setForm] = useState(emptyForm);
 
@@ -25,8 +39,9 @@ export const TurnoFormModal = ({ open, item, onClose }: TurnoFormModalProps) => 
     if (item) {
       setForm({
         nombre: item.nombre,
-        horaInicio: item.horaInicio,
-        horaFin: item.horaFin,
+        horaInicio: fromApiTime(item.horaInicio),
+        horaFin: fromApiTime(item.horaFin),
+        activo: String(item.activo),
       });
     } else {
       setForm(emptyForm);
@@ -35,7 +50,17 @@ export const TurnoFormModal = ({ open, item, onClose }: TurnoFormModalProps) => 
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    onClose();
+
+    if (!form.nombre.trim() || !form.horaInicio || !form.horaFin) {
+      return;
+    }
+
+    onSubmit({
+      nombre: form.nombre.trim(),
+      horaInicio: toApiTime(form.horaInicio),
+      horaFin: toApiTime(form.horaFin),
+      activo: form.activo === "true",
+    });
   };
 
   return (
@@ -45,11 +70,15 @@ export const TurnoFormModal = ({ open, item, onClose }: TurnoFormModalProps) => 
       onClose={onClose}
       footer={
         <>
-          <Button variant="secondary" onClick={onClose}>
+          <Button variant="secondary" onClick={onClose} disabled={isSubmitting}>
             Cancelar
           </Button>
-          <Button type="submit" form="turno-form">
-            {isEditing ? "Guardar cambios" : "Crear turno"}
+          <Button type="submit" form="turno-form" disabled={isSubmitting}>
+            {isSubmitting
+              ? "Guardando..."
+              : isEditing
+                ? "Guardar cambios"
+                : "Crear turno"}
           </Button>
         </>
       }
@@ -59,27 +88,44 @@ export const TurnoFormModal = ({ open, item, onClose }: TurnoFormModalProps) => 
           id="turno-nombre"
           label="Nombre"
           value={form.nombre}
+          required
           onChange={(event) =>
             setForm((prev) => ({ ...prev, nombre: event.target.value }))
           }
         />
-        <FormInput
-          id="turno-inicio"
-          label="Hora inicio"
-          type="time"
-          value={form.horaInicio}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FormInput
+            id="turno-inicio"
+            label="Hora inicio"
+            type="time"
+            required
+            value={form.horaInicio}
+            onChange={(event) =>
+              setForm((prev) => ({ ...prev, horaInicio: event.target.value }))
+            }
+          />
+          <FormInput
+            id="turno-fin"
+            label="Hora fin"
+            type="time"
+            required
+            value={form.horaFin}
+            onChange={(event) =>
+              setForm((prev) => ({ ...prev, horaFin: event.target.value }))
+            }
+          />
+        </div>
+        <FormSelect
+          id="turno-activo"
+          label="Activo"
+          value={form.activo}
           onChange={(event) =>
-            setForm((prev) => ({ ...prev, horaInicio: event.target.value }))
+            setForm((prev) => ({ ...prev, activo: event.target.value }))
           }
-        />
-        <FormInput
-          id="turno-fin"
-          label="Hora fin"
-          type="time"
-          value={form.horaFin}
-          onChange={(event) =>
-            setForm((prev) => ({ ...prev, horaFin: event.target.value }))
-          }
+          options={[
+            { value: "true", label: "Si" },
+            { value: "false", label: "No" },
+          ]}
         />
       </form>
     </Modal>

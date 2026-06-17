@@ -12,6 +12,19 @@ import type {
   ReservaUpdateInput,
 } from "../types/reservaType";
 
+const buildReservaPayload = (
+  input: ReservaCreateInput | ReservaUpdateInput,
+  current?: Reserva,
+): ReservaCreateInput => ({
+  fecha: input.fecha ?? current!.fecha,
+  horaInicio: input.horaInicio ?? current!.horaInicio,
+  horaFin: input.horaFin ?? current!.horaFin,
+  capacidad: input.capacidad ?? current!.capacidad,
+  clienteId: input.clienteId ?? current!.clienteId,
+  mesaId: input.mesaId ?? current!.mesaId,
+  estadoId: input.estadoId ?? current!.estadoId,
+});
+
 /** Servicio de acceso a datos del modulo Reservas. */
 export const getReservas = async (): Promise<Reserva[]> => {
   return resolveMockOrFetch(reservasStore.getAll(), async () => {
@@ -36,7 +49,11 @@ export const createReserva = async (
   input: ReservaCreateInput,
 ): Promise<Reserva> => {
   return resolveMockOrMutate(
-    () => reservasStore.create(input),
+    () =>
+      reservasStore.create({
+        ...input,
+        estado: "Pendiente",
+      }),
     async () => {
       const response = await axiosInstance.post<Reserva>(
         API_ENDPOINTS.reservas,
@@ -57,9 +74,11 @@ export const updateReserva = async ({
   return resolveMockOrMutate(
     () => reservasStore.update(id, data),
     async () => {
+      const current = await getReservaById(id);
+      const payload = buildReservaPayload(data, current);
       const response = await axiosInstance.put<Reserva>(
         `${API_ENDPOINTS.reservas}/${id}`,
-        data,
+        payload,
       );
       return response.data;
     },

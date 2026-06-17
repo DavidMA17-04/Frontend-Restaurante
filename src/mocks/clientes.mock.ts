@@ -3,26 +3,23 @@ import type { Cliente } from "@/features/clientes/types/clienteType";
 export const CLIENTES_MOCK: Cliente[] = [
   {
     id: 1,
-    nombre: "Ana Garcia",
-    email: "ana.garcia@mail.com",
-    telefono: "8888-1001",
+    nombre: "Juan",
+    apellido: "Jimenez",
+    telefono: 88881111,
+    cedula: 504580546,
   },
   {
     id: 2,
-    nombre: "Luis Mora",
-    email: "luis.mora@mail.com",
-    telefono: "8888-1002",
+    nombre: "Maria",
+    apellido: "Lopez",
+    telefono: 88882222,
+    cedula: 504580547,
   },
   {
     id: 3,
-    nombre: "Maria Fernandez",
-    email: "maria.f@mail.com",
-    telefono: "8888-1003",
-  },
-  {
-    id: 4,
-    nombre: "Carlos Vargas",
-    email: "carlos.vargas@mail.com",
-    telefono: "8888-1004",
+    nombre: "Carlos",
+    apellido: "Fernandez",
+    telefono: 88883333,
+    cedula: 504580548,
   },
 ];

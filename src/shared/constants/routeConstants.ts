@@ -11,6 +11,9 @@ export const ROUTES = {
   listaEspera: "/lista-espera",
 } as const;
 
+/** Modulos disponibles solo con datos mock (sin endpoint en el backend). */
+export const MOCK_ONLY_MODULES = ["empleados"] as const;
+
 export type NavIconKey =
   | "home"
   | "users"
@@ -35,12 +38,6 @@ export const NAV_ITEMS = [
     path: ROUTES.clientes,
     icon: "users" as NavIconKey,
     description: "Gestion de clientes registrados",
-  },
-  {
-    label: "Empleados",
-    path: ROUTES.empleados,
-    icon: "briefcase" as NavIconKey,
-    description: "Personal y roles del restaurante",
   },
   {
     label: "Mesas",

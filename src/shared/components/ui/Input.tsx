@@ -11,7 +11,7 @@ export const Input = ({ label, className, id, ...props }: InputProps) => {
     <div className="flex flex-col gap-1.5">
       {label && (
         <label
-          className="text-sm font-medium text-slate-700"
+          className="text-xs font-medium uppercase tracking-wider text-muted"
           htmlFor={id}
         >
           {label}
@@ -20,7 +20,7 @@ export const Input = ({ label, className, id, ...props }: InputProps) => {
       <input
         id={id}
         className={cn(
-          "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:border-brand-600 focus:outline-none focus:ring-4 focus:ring-brand-600/10",
+          "w-full border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted/60 transition-colors focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10",
           className,
         )}
         {...props}

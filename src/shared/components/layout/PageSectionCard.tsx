@@ -18,12 +18,14 @@ export const PageSectionCard = ({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-xl border border-border bg-surface shadow-sm",
+        "overflow-hidden border border-border border-t-2 border-t-brand-500/50 bg-surface-elevated",
         className,
       )}
     >
-      <div className="border-b border-border px-6 py-4">
-        <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
+      <div className="border-b border-brand-500/15 bg-brand-50/40 px-6 py-4 dark:bg-brand-50/20">
+        <h2 className="text-xs font-medium uppercase tracking-[0.15em] text-brand-600 dark:text-brand-500">
+          {title}
+        </h2>
         {description && (
           <p className="mt-1 text-sm text-muted">{description}</p>
         )}

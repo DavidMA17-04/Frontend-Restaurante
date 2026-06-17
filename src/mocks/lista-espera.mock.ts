@@ -4,25 +4,17 @@ export const LISTA_ESPERA_MOCK: ListaEspera[] = [
   {
     id: 1,
     clienteId: 1,
-    fechaRegistro: "2026-06-15T19:30:00",
-    estado: "En espera",
+    fecha: "2026-06-15",
+    horaInicio: "19:30:00",
+    horaFin: "21:30:00",
+    cantidad: 4,
   },
   {
     id: 2,
     clienteId: 3,
-    fechaRegistro: "2026-06-15T20:00:00",
-    estado: "Atendido",
-  },
-  {
-    id: 3,
-    clienteId: 2,
-    fechaRegistro: "2026-06-15T20:15:00",
-    estado: "En espera",
-  },
-  {
-    id: 4,
-    clienteId: 4,
-    fechaRegistro: "2026-06-15T20:45:00",
-    estado: "Cancelado",
+    fecha: "2026-06-15",
+    horaInicio: "20:00:00",
+    horaFin: "22:00:00",
+    cantidad: 2,
   },
 ];

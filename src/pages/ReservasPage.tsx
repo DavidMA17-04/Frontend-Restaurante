@@ -15,16 +15,13 @@ import type {
 import {
   AlertMessage,
   Loader,
-  MockDataBanner,
   PageHeader,
 } from "@/shared/components/feedback";
 import { PageSectionCard } from "@/shared/components/layout/PageSectionCard";
 import { TableToolbar } from "@/shared/components/layout/TableToolbar";
 import { Button } from "@/shared/components/ui/Button";
+import { getApiErrorMessage } from "@/shared/utils/apiError";
 import { filterBySearch } from "@/shared/utils/filterBySearch";
-
-const getMutationErrorMessage = (error: unknown) =>
-  error instanceof Error ? error.message : "Ocurrio un error inesperado.";
 
 /** Vista del modulo Reservas con CRUD completo. */
 export const ReservasPage = () => {
@@ -38,7 +35,13 @@ export const ReservasPage = () => {
   const [selectedItem, setSelectedItem] = useState<Reserva | null>(null);
 
   const filteredData = useMemo(
-    () => filterBySearch(data ?? [], search, ["estado", "clienteId", "mesaId"]),
+    () =>
+      filterBySearch(data ?? [], search, [
+        "estado",
+        "clienteId",
+        "mesaId",
+        "fecha",
+      ]),
     [data, search],
   );
 
@@ -96,13 +99,11 @@ export const ReservasPage = () => {
         }
       />
 
-      <MockDataBanner entityName="Reservas" />
-
       {mutationError && (
         <AlertMessage
           variant="error"
           title="Error en la operacion"
-          message={getMutationErrorMessage(mutationError)}
+          message={getApiErrorMessage(mutationError)}
           className="mb-6"
         />
       )}
@@ -121,7 +122,7 @@ export const ReservasPage = () => {
           <TableToolbar
             searchValue={search}
             onSearchChange={setSearch}
-            searchPlaceholder="Buscar por estado, cliente o mesa..."
+            searchPlaceholder="Buscar por estado, cliente, mesa o fecha..."
           />
           <ReservaTablePlaceholder
             data={filteredData}

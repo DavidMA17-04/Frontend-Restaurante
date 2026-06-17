@@ -31,16 +31,16 @@ export const DataTable = <T,>({
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-sm">
+    <div className="overflow-hidden border border-border bg-surface-elevated">
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-border">
-          <thead className="bg-slate-50">
+          <thead className="border-b border-brand-500/30 bg-brand-50/60 dark:bg-brand-50/30">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500"
+                    className="px-4 py-3 text-left text-[10px] font-medium uppercase tracking-[0.15em] text-brand-600 dark:text-brand-500"
                   >
                     {header.isPlaceholder
                       ? null
@@ -57,12 +57,12 @@ export const DataTable = <T,>({
             {table.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}
-                className="transition-colors hover:bg-slate-50/80"
+                className="transition-colors hover:bg-brand-50/40 dark:hover:bg-brand-50/20"
               >
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}
-                    className="px-4 py-3 text-sm text-slate-700"
+                    className="px-4 py-3 text-sm text-foreground/85"
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>

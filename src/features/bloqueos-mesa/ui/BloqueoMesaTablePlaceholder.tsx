@@ -1,6 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/shared/components/tables";
 import { TableRowActions } from "@/shared/components/layout/TableRowActions";
+import { formatDateTimeParts } from "@/shared/utils/dateTime";
 import type { BloqueoMesa } from "../types/bloqueoMesaType";
 
 interface BloqueoMesaTablePlaceholderProps {
@@ -18,16 +19,11 @@ export const BloqueoMesaTablePlaceholder = ({
     { accessorKey: "id", header: "ID" },
     { accessorKey: "mesaId", header: "Mesa" },
     {
-      accessorKey: "fechaInicio",
-      header: "Inicio",
-      cell: ({ getValue }) =>
-        new Date(getValue<string>()).toLocaleString("es-CR"),
-    },
-    {
-      accessorKey: "fechaFin",
-      header: "Fin",
-      cell: ({ getValue }) =>
-        new Date(getValue<string>()).toLocaleString("es-CR"),
+      id: "fechaHorario",
+      header: "Fecha y horario",
+      cell: ({ row }) =>
+        formatDateTimeParts(row.original.fecha, row.original.horaInicio) +
+        ` - ${row.original.horaFin.slice(0, 5)}`,
     },
     { accessorKey: "motivo", header: "Motivo" },
     {
@@ -46,7 +42,7 @@ export const BloqueoMesaTablePlaceholder = ({
     <DataTable
       data={data}
       columns={columns}
-      emptyMessage="Aun no hay bloqueos. La integracion con el backend se realizara en la siguiente etapa."
+      emptyMessage="Aun no hay bloqueos registrados."
     />
   );
 };

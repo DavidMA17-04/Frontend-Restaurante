@@ -15,18 +15,15 @@ import type {
 import {
   AlertMessage,
   Loader,
-  MockDataBanner,
   PageHeader,
 } from "@/shared/components/feedback";
 import { PageSectionCard } from "@/shared/components/layout/PageSectionCard";
 import { TableToolbar } from "@/shared/components/layout/TableToolbar";
 import { Button } from "@/shared/components/ui/Button";
+import { env } from "@/config/env";
+import { getApiErrorMessage } from "@/shared/utils/apiError";
 import { filterBySearch } from "@/shared/utils/filterBySearch";
 
-const getMutationErrorMessage = (error: unknown) =>
-  error instanceof Error ? error.message : "Ocurrio un error inesperado.";
-
-/** Vista del modulo Empleados con CRUD completo. */
 export const EmpleadosPage = () => {
   const { data, isLoading, isError } = useGetEmpleados();
   const createMutation = useCreateEmpleado();
@@ -96,13 +93,20 @@ export const EmpleadosPage = () => {
         }
       />
 
-      <MockDataBanner entityName="Empleados" />
+      {!env.useMock && (
+        <AlertMessage
+          variant="info"
+          title="Modulo no disponible"
+          message="Empleados no existe en RestauranteAPI. Activa VITE_USE_MOCK=true para usar datos de demostracion."
+          className="mb-6"
+        />
+      )}
 
       {mutationError && (
         <AlertMessage
           variant="error"
           title="Error en la operacion"
-          message={getMutationErrorMessage(mutationError)}
+          message={getApiErrorMessage(mutationError)}
           className="mb-6"
         />
       )}

@@ -2,6 +2,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/shared/components/ui/Badge";
 import { DataTable } from "@/shared/components/tables";
 import { TableRowActions } from "@/shared/components/layout/TableRowActions";
+import { formatDateTimeParts } from "@/shared/utils/dateTime";
 import { getEstadoBadgeVariant } from "@/shared/utils/statusBadge";
 import type { Reserva } from "../types/reservaType";
 
@@ -21,11 +22,13 @@ export const ReservaTablePlaceholder = ({
     { accessorKey: "clienteId", header: "Cliente" },
     { accessorKey: "mesaId", header: "Mesa" },
     {
-      accessorKey: "fecha",
-      header: "Fecha",
-      cell: ({ getValue }) =>
-        new Date(getValue<string>()).toLocaleString("es-CR"),
+      id: "fechaHorario",
+      header: "Fecha y horario",
+      cell: ({ row }) =>
+        formatDateTimeParts(row.original.fecha, row.original.horaInicio) +
+        ` - ${row.original.horaFin.slice(0, 5)}`,
     },
+    { accessorKey: "capacidad", header: "Capacidad" },
     {
       accessorKey: "estado",
       header: "Estado",
@@ -52,7 +55,7 @@ export const ReservaTablePlaceholder = ({
     <DataTable
       data={data}
       columns={columns}
-      emptyMessage="Aun no hay reservas. La integracion con el backend se realizara en la siguiente etapa."
+      emptyMessage="Aun no hay reservas registradas."
     />
   );
 };

@@ -6,8 +6,8 @@ import {
   TableProperties,
   Users,
 } from "lucide-react";
-import { LISTA_ESPERA_MOCK } from "@/mocks";
 import { useGetClientes } from "@/features/clientes";
+import { useGetListaEspera } from "@/features/lista-espera";
 import { useGetMesas } from "@/features/mesas";
 import { useGetReservas } from "@/features/reservas";
 import { Card } from "@/shared/components/ui/Card";
@@ -16,7 +16,11 @@ import { StatCard } from "@/shared/components/layout/StatCard";
 import { Badge } from "@/shared/components/ui/Badge";
 import { NAV_ITEMS, ROUTES } from "@/shared/constants/routeConstants";
 import { NAV_ICONS } from "@/shared/utils/navIcons";
+import { formatDateTimeParts } from "@/shared/utils/dateTime";
 import { getEstadoBadgeVariant } from "@/shared/utils/statusBadge";
+
+const HERO_IMAGE =
+  "https://images.unsplash.com/photo-1514933650353-0059814c72d8?w=1600&q=80";
 
 /** Pagina de inicio con metricas y acceso rapido a cada modulo. */
 export const HomePage = () => {
@@ -24,36 +28,38 @@ export const HomePage = () => {
   const { data: clientes } = useGetClientes();
   const { data: mesas } = useGetMesas();
   const { data: reservas } = useGetReservas();
+  const { data: listaEspera } = useGetListaEspera();
 
   const totalClientes = clientes?.length ?? 0;
-  const mesasDisponibles =
-    mesas?.filter((mesa) => mesa.estado === "Disponible").length ?? 0;
+  const totalMesas = mesas?.length ?? 0;
   const reservasConfirmadas =
     reservas?.filter((reserva) => reserva.estado === "Confirmada").length ?? 0;
-  const clientesEnEspera = LISTA_ESPERA_MOCK.filter(
-    (entrada) => entrada.estado.toLowerCase().includes("espera"),
-  ).length;
+  const clientesEnEspera = listaEspera?.length ?? 0;
 
   const ultimasReservas = [...(reservas ?? [])]
-    .sort(
-      (a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime(),
-    )
+    .sort((a, b) => b.fecha.localeCompare(a.fecha))
     .slice(0, 3);
 
   return (
     <section>
       <PageHeader
+        category="Inicio"
         title="Panel principal"
-        subtitle="Resumen del restaurante con datos de demostracion. Selecciona un modulo para gestionar cada area."
+        subtitle="Resumen operativo del restaurante."
       />
+
+      <div className="relative -mx-4 mb-10 overflow-hidden sm:-mx-6 lg:-mx-10">
+        <img
+          src={HERO_IMAGE}
+          alt="Interior del restaurante La Reserva"
+          className="h-56 w-full object-cover md:h-80"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-brand-500/15 to-brand-500/5" />
+      </div>
 
       <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Total clientes" value={totalClientes} icon={Users} />
-        <StatCard
-          label="Mesas disponibles"
-          value={mesasDisponibles}
-          icon={TableProperties}
-        />
+        <StatCard label="Total mesas" value={totalMesas} icon={TableProperties} />
         <StatCard
           label="Reservas confirmadas"
           value={reservasConfirmadas}
@@ -67,9 +73,9 @@ export const HomePage = () => {
       </div>
 
       {ultimasReservas.length > 0 && (
-        <div className="mb-8 overflow-hidden rounded-xl border border-border bg-surface shadow-sm">
-          <div className="border-b border-border px-6 py-4">
-            <h2 className="text-sm font-semibold text-slate-900">
+        <div className="mb-8 overflow-hidden border border-border border-t-2 border-t-brand-500 bg-surface-elevated">
+          <div className="border-b border-brand-500/15 bg-brand-50/40 px-6 py-4 dark:bg-brand-50/20">
+            <h2 className="text-xs font-medium uppercase tracking-[0.15em] text-brand-600 dark:text-brand-500">
               Reservas recientes
             </h2>
             <p className="mt-1 text-sm text-muted">
@@ -83,12 +89,12 @@ export const HomePage = () => {
                 className="flex flex-wrap items-center justify-between gap-3 px-6 py-4"
               >
                 <div>
-                  <p className="text-sm font-medium text-slate-900">
+                  <p className="text-sm font-medium text-foreground">
                     Reserva #{reserva.id} — Mesa {reserva.mesaId}
                   </p>
                   <p className="text-sm text-muted">
                     Cliente {reserva.clienteId} ·{" "}
-                    {new Date(reserva.fecha).toLocaleString("es-CR")}
+                    {formatDateTimeParts(reserva.fecha, reserva.horaInicio)}
                   </p>
                 </div>
                 <Badge variant={getEstadoBadgeVariant(reserva.estado)}>
@@ -101,7 +107,7 @@ export const HomePage = () => {
       )}
 
       <div>
-        <h2 className="mb-4 text-sm font-semibold text-slate-900">
+        <h2 className="mb-4 font-serif text-sm uppercase tracking-[0.15em] text-brand-500">
           Accesos rapidos
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -110,14 +116,14 @@ export const HomePage = () => {
 
             return (
               <Link key={module.path} to={module.path} className="group">
-                <Card className="h-full transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-600/30 hover:shadow-md">
+                <Card className="h-full border-t-2 border-t-brand-500/60 transition-all duration-200 hover:border-brand-500/60">
                   <div className="flex items-start justify-between gap-4">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
-                      <Icon className="h-5 w-5" />
+                    <div className="flex h-11 w-11 items-center justify-center border border-brand-500/30 bg-brand-50 text-brand-500">
+                      <Icon className="h-5 w-5" strokeWidth={1.5} />
                     </div>
-                    <ArrowRight className="h-4 w-4 text-slate-400 transition-transform group-hover:translate-x-1 group-hover:text-brand-600" />
+                    <ArrowRight className="h-4 w-4 text-muted transition-transform group-hover:translate-x-1 group-hover:text-brand-500" />
                   </div>
-                  <h3 className="mt-4 text-lg font-semibold text-slate-900">
+                  <h3 className="mt-4 font-serif text-lg text-foreground">
                     {module.label}
                   </h3>
                   <p className="mt-2 text-sm leading-6 text-muted">

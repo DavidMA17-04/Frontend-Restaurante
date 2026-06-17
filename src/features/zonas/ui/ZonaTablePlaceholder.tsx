@@ -1,6 +1,8 @@
 import type { ColumnDef } from "@tanstack/react-table";
+import { Badge } from "@/shared/components/ui/Badge";
 import { DataTable } from "@/shared/components/tables";
 import { TableRowActions } from "@/shared/components/layout/TableRowActions";
+import { getActivoBadgeVariant } from "@/shared/utils/statusBadge";
 import type { Zona } from "../types/zonaType";
 
 interface ZonaTablePlaceholderProps {
@@ -17,7 +19,18 @@ export const ZonaTablePlaceholder = ({
   const columns: ColumnDef<Zona>[] = [
     { accessorKey: "id", header: "ID" },
     { accessorKey: "nombre", header: "Nombre" },
-    { accessorKey: "descripcion", header: "Descripcion" },
+    {
+      accessorKey: "disponibilidad",
+      header: "Disponibilidad",
+      cell: ({ getValue }) => {
+        const disponible = getValue<boolean>();
+        return (
+          <Badge variant={getActivoBadgeVariant(disponible)}>
+            {disponible ? "Disponible" : "No disponible"}
+          </Badge>
+        );
+      },
+    },
     {
       id: "acciones",
       header: "Acciones",
@@ -34,7 +47,7 @@ export const ZonaTablePlaceholder = ({
     <DataTable
       data={data}
       columns={columns}
-      emptyMessage="Aun no hay zonas. La integracion con el backend se realizara en la siguiente etapa."
+      emptyMessage="Aun no hay zonas registradas."
     />
   );
 };

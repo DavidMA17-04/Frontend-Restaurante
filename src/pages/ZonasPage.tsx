@@ -12,16 +12,13 @@ import type { Zona, ZonaCreateInput } from "@/features/zonas/types/zonaType";
 import {
   AlertMessage,
   Loader,
-  MockDataBanner,
   PageHeader,
 } from "@/shared/components/feedback";
 import { PageSectionCard } from "@/shared/components/layout/PageSectionCard";
 import { TableToolbar } from "@/shared/components/layout/TableToolbar";
 import { Button } from "@/shared/components/ui/Button";
+import { getApiErrorMessage } from "@/shared/utils/apiError";
 import { filterBySearch } from "@/shared/utils/filterBySearch";
-
-const getMutationErrorMessage = (error: unknown) =>
-  error instanceof Error ? error.message : "Ocurrio un error inesperado.";
 
 /** Vista del modulo Zonas con CRUD completo. */
 export const ZonasPage = () => {
@@ -35,7 +32,7 @@ export const ZonasPage = () => {
   const [selectedItem, setSelectedItem] = useState<Zona | null>(null);
 
   const filteredData = useMemo(
-    () => filterBySearch(data ?? [], search, ["nombre", "descripcion"]),
+    () => filterBySearch(data ?? [], search, ["nombre"]),
     [data, search],
   );
 
@@ -93,13 +90,11 @@ export const ZonasPage = () => {
         }
       />
 
-      <MockDataBanner entityName="Zonas" />
-
       {mutationError && (
         <AlertMessage
           variant="error"
           title="Error en la operacion"
-          message={getMutationErrorMessage(mutationError)}
+          message={getApiErrorMessage(mutationError)}
           className="mb-6"
         />
       )}
@@ -118,7 +113,7 @@ export const ZonasPage = () => {
           <TableToolbar
             searchValue={search}
             onSearchChange={setSearch}
-            searchPlaceholder="Buscar por nombre o descripcion..."
+            searchPlaceholder="Buscar por nombre..."
           />
           <ZonaTablePlaceholder
             data={filteredData}

@@ -3,31 +3,45 @@ import { useMemo, useState } from "react";
 import {
   BloqueoMesaFormModal,
   BloqueoMesaTablePlaceholder,
+  useCreateBloqueoMesa,
+  useDeleteBloqueoMesa,
   useGetBloqueosMesa,
+  useUpdateBloqueoMesa,
 } from "@/features/bloqueos-mesa";
-import type { BloqueoMesa } from "@/features/bloqueos-mesa/types/bloqueoMesaType";
+import type {
+  BloqueoMesa,
+  BloqueoMesaCreateInput,
+} from "@/features/bloqueos-mesa/types/bloqueoMesaType";
 import {
   AlertMessage,
   Loader,
-  MockDataBanner,
   PageHeader,
 } from "@/shared/components/feedback";
 import { PageSectionCard } from "@/shared/components/layout/PageSectionCard";
 import { TableToolbar } from "@/shared/components/layout/TableToolbar";
 import { Button } from "@/shared/components/ui/Button";
+import { getApiErrorMessage } from "@/shared/utils/apiError";
 import { filterBySearch } from "@/shared/utils/filterBySearch";
 
-/** Vista del modulo Bloqueos de Mesa. */
+/** Vista del modulo Bloqueos de Mesa con CRUD alineado al backend. */
 export const BloqueosMesaPage = () => {
   const { data, isLoading, isError } = useGetBloqueosMesa();
+  const createMutation = useCreateBloqueoMesa();
+  const updateMutation = useUpdateBloqueoMesa();
+  const deleteMutation = useDeleteBloqueoMesa();
+
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<BloqueoMesa | null>(null);
 
   const filteredData = useMemo(
-    () => filterBySearch(data ?? [], search, ["motivo", "mesaId"]),
+    () => filterBySearch(data ?? [], search, ["motivo", "mesaId", "fecha"]),
     [data, search],
   );
+
+  const isSaving = createMutation.isPending || updateMutation.isPending;
+  const mutationError =
+    createMutation.error ?? updateMutation.error ?? deleteMutation.error;
 
   const openCreate = () => {
     setSelectedItem(null);
@@ -40,7 +54,32 @@ export const BloqueosMesaPage = () => {
   };
 
   const handleDelete = (item: BloqueoMesa) => {
-    window.confirm(`¿Eliminar el bloqueo #${item.id}?`);
+    if (
+      !window.confirm(
+        `¿Desbloquear la mesa #${item.mesaId}? Se eliminaran sus bloqueos.`,
+      )
+    ) {
+      return;
+    }
+
+    deleteMutation.mutate(item.mesaId);
+  };
+
+  const handleFormSubmit = async (payload: BloqueoMesaCreateInput) => {
+    try {
+      if (selectedItem) {
+        await updateMutation.mutateAsync({
+          id: selectedItem.id,
+          data: payload,
+        });
+      } else {
+        await createMutation.mutateAsync(payload);
+      }
+
+      closeModal();
+    } catch {
+      // El error se muestra via mutationError en la UI.
+    }
   };
 
   const closeModal = () => {
@@ -61,7 +100,14 @@ export const BloqueosMesaPage = () => {
         }
       />
 
-      <MockDataBanner entityName="Bloqueos de mesa" />
+      {mutationError && (
+        <AlertMessage
+          variant="error"
+          title="Error en la operacion"
+          message={getApiErrorMessage(mutationError)}
+          className="mb-6"
+        />
+      )}
 
       {isLoading && <Loader label="Cargando bloqueos..." />}
       {isError && (
@@ -77,7 +123,7 @@ export const BloqueosMesaPage = () => {
           <TableToolbar
             searchValue={search}
             onSearchChange={setSearch}
-            searchPlaceholder="Buscar por motivo o mesa..."
+            searchPlaceholder="Buscar por motivo, mesa o fecha..."
           />
           <BloqueoMesaTablePlaceholder
             data={filteredData}
@@ -91,6 +137,8 @@ export const BloqueosMesaPage = () => {
         open={modalOpen}
         item={selectedItem}
         onClose={closeModal}
+        onSubmit={handleFormSubmit}
+        isSubmitting={isSaving}
       />
     </section>
   );

@@ -14,11 +14,11 @@ export const Loader = ({
   return (
     <div
       className={cn(
-        "flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-6 text-sm text-slate-600",
+        "flex items-center gap-3 border border-border bg-surface px-4 py-6 text-sm text-muted",
         className,
       )}
     >
-      <Loader2 className="h-5 w-5 animate-spin text-brand-600" />
+      <Loader2 className="h-5 w-5 animate-spin text-brand-500" />
       <span>{label}</span>
     </div>
   );

@@ -1,11 +1,11 @@
 /**
- * Representa una zona del restaurante (ej. terraza, salon principal).
- * Los campos se alinearan con el DTO del backend ASP.NET Core.
+ * Representa una zona del restaurante.
+ * Alineado con ZonaResponseDTO / ZonaCreateDTO del backend.
  */
 export interface Zona {
   id: number;
   nombre: string;
-  descripcion: string;
+  disponibilidad: boolean;
 }
 
 export type ZonaCreateInput = Omit<Zona, "id">;

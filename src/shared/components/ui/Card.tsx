@@ -11,7 +11,7 @@ export const Card = ({ children, className }: CardProps) => {
   return (
     <div
       className={cn(
-        "rounded-xl border border-border bg-surface p-6 shadow-sm",
+        "border border-border bg-surface-elevated p-6",
         className,
       )}
     >

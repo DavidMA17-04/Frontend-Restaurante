@@ -2,8 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { FormInput } from "@/shared/components/forms";
 import { Button } from "@/shared/components/ui/Button";
 import { Modal } from "@/shared/components/ui/Modal";
-import type { ClienteCreateInput } from "../types/clienteType";
-import type { Cliente } from "../types/clienteType";
+import type { Cliente, ClienteCreateInput } from "../types/clienteType";
 
 interface ClienteFormModalProps {
   open: boolean;
@@ -13,10 +12,11 @@ interface ClienteFormModalProps {
   isSubmitting?: boolean;
 }
 
-const emptyForm: ClienteCreateInput = {
+const emptyForm = {
   nombre: "",
-  email: "",
+  apellido: "",
   telefono: "",
+  cedula: "",
 };
 
 /** Modal de crear/editar cliente. */
@@ -34,8 +34,9 @@ export const ClienteFormModal = ({
     if (item) {
       setForm({
         nombre: item.nombre,
-        email: item.email,
-        telefono: item.telefono,
+        apellido: item.apellido,
+        telefono: String(item.telefono),
+        cedula: String(item.cedula),
       });
     } else {
       setForm(emptyForm);
@@ -45,14 +46,18 @@ export const ClienteFormModal = ({
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
 
-    if (!form.nombre.trim()) {
+    const telefono = Number(form.telefono);
+    const cedula = Number(form.cedula);
+
+    if (!form.nombre.trim() || !form.apellido.trim() || !telefono || !cedula) {
       return;
     }
 
     onSubmit({
       nombre: form.nombre.trim(),
-      email: form.email.trim(),
-      telefono: form.telefono.trim(),
+      apellido: form.apellido.trim(),
+      telefono,
+      cedula,
     });
   };
 
@@ -87,20 +92,32 @@ export const ClienteFormModal = ({
           }
         />
         <FormInput
-          id="cliente-email"
-          label="Email"
-          type="email"
-          value={form.email}
+          id="cliente-apellido"
+          label="Apellido"
+          value={form.apellido}
+          required
           onChange={(event) =>
-            setForm((prev) => ({ ...prev, email: event.target.value }))
+            setForm((prev) => ({ ...prev, apellido: event.target.value }))
           }
         />
         <FormInput
           id="cliente-telefono"
           label="Telefono"
+          type="number"
           value={form.telefono}
+          required
           onChange={(event) =>
             setForm((prev) => ({ ...prev, telefono: event.target.value }))
+          }
+        />
+        <FormInput
+          id="cliente-cedula"
+          label="Cedula"
+          type="number"
+          value={form.cedula}
+          required
+          onChange={(event) =>
+            setForm((prev) => ({ ...prev, cedula: event.target.value }))
           }
         />
       </form>

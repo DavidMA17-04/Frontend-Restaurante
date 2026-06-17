@@ -1,14 +1,18 @@
 /**
  * Representa una reserva del restaurante.
- * Los campos se alinearan con el DTO del backend ASP.NET Core.
+ * Alineado con ReservaResponseDTO / ReservaCreateDTO del backend.
  */
 export interface Reserva {
   id: number;
+  fecha: string;
+  horaInicio: string;
+  horaFin: string;
+  capacidad: number;
   clienteId: number;
   mesaId: number;
-  fecha: string;
+  estadoId: number;
   estado: string;
 }
 
-export type ReservaCreateInput = Omit<Reserva, "id">;
+export type ReservaCreateInput = Omit<Reserva, "id" | "estado">;
 export type ReservaUpdateInput = Partial<ReservaCreateInput>;

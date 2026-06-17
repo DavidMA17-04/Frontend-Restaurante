@@ -12,16 +12,13 @@ import type { Mesa, MesaCreateInput } from "@/features/mesas/types/mesaType";
 import {
   AlertMessage,
   Loader,
-  MockDataBanner,
   PageHeader,
 } from "@/shared/components/feedback";
 import { PageSectionCard } from "@/shared/components/layout/PageSectionCard";
 import { TableToolbar } from "@/shared/components/layout/TableToolbar";
 import { Button } from "@/shared/components/ui/Button";
+import { getApiErrorMessage } from "@/shared/utils/apiError";
 import { filterBySearch } from "@/shared/utils/filterBySearch";
-
-const getMutationErrorMessage = (error: unknown) =>
-  error instanceof Error ? error.message : "Ocurrio un error inesperado.";
 
 /** Vista del modulo Mesas con CRUD completo. */
 export const MesasPage = () => {
@@ -36,7 +33,7 @@ export const MesasPage = () => {
 
   const filteredData = useMemo(
     () =>
-      filterBySearch(data ?? [], search, ["numero", "capacidad", "estado"]),
+      filterBySearch(data ?? [], search, ["numero", "capacidad", "zonaId"]),
     [data, search],
   );
 
@@ -94,13 +91,11 @@ export const MesasPage = () => {
         }
       />
 
-      <MockDataBanner entityName="Mesas" />
-
       {mutationError && (
         <AlertMessage
           variant="error"
           title="Error en la operacion"
-          message={getMutationErrorMessage(mutationError)}
+          message={getApiErrorMessage(mutationError)}
           className="mb-6"
         />
       )}
@@ -119,7 +114,7 @@ export const MesasPage = () => {
           <TableToolbar
             searchValue={search}
             onSearchChange={setSearch}
-            searchPlaceholder="Buscar por numero o estado..."
+            searchPlaceholder="Buscar por numero, capacidad o zona..."
           />
           <MesaTablePlaceholder
             data={filteredData}

@@ -20,10 +20,14 @@ export const getZonaById = async (id: number): Promise<Zona> => {
   return resolveMockOrFetchById(
     () => zonasStore.getById(id),
     async () => {
-      const response = await axiosInstance.get<Zona>(
-        `${API_ENDPOINTS.zonas}/${id}`,
-      );
-      return response.data;
+      const zonas = await getZonas();
+      const zona = zonas.find((item) => item.id === id);
+
+      if (!zona) {
+        throw new Error(`Zona con id ${id} no encontrada.`);
+      }
+
+      return zona;
     },
   );
 };
@@ -51,9 +55,14 @@ export const updateZona = async ({
   return resolveMockOrMutate(
     () => zonasStore.update(id, data),
     async () => {
+      const current = await getZonaById(id);
+      const payload: ZonaCreateInput = {
+        nombre: data.nombre ?? current.nombre,
+        disponibilidad: data.disponibilidad ?? current.disponibilidad,
+      };
       const response = await axiosInstance.put<Zona>(
         `${API_ENDPOINTS.zonas}/${id}`,
-        data,
+        payload,
       );
       return response.data;
     },

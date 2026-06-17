@@ -25,7 +25,7 @@ export const FormSelect = ({
     <div className="flex flex-col gap-1.5">
       {label && (
         <label
-          className="text-sm font-medium text-slate-700"
+          className="text-xs font-medium uppercase tracking-wider text-muted"
           htmlFor={id}
         >
           {label}
@@ -34,10 +34,10 @@ export const FormSelect = ({
       <select
         id={id}
         className={cn(
-          "w-full rounded-lg border bg-surface px-3 py-2 text-sm text-slate-900 transition-colors focus:outline-none focus:ring-4",
+          "w-full border bg-surface px-3 py-2 text-sm text-foreground transition-colors focus:outline-none focus:ring-4",
           error
             ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
-            : "border-border focus:border-brand-600 focus:ring-brand-600/10",
+            : "border-border focus:border-brand-500 focus:ring-brand-500/10",
           className,
         )}
         {...props}
@@ -48,7 +48,7 @@ export const FormSelect = ({
           </option>
         ))}
       </select>
-      {error && <span className="text-xs text-red-600">{error}</span>}
+      {error && <span className="text-xs text-red-400">{error}</span>}
     </div>
   );
 };

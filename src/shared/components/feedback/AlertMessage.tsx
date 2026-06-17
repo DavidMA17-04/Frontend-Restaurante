@@ -17,18 +17,20 @@ const variantStyles: Record<
   { container: string; icon: string; Icon: typeof AlertCircle }
 > = {
   error: {
-    container: "border-red-200 bg-red-50 text-red-800",
-    icon: "text-red-600",
+    container:
+      "border-red-200 bg-red-50 text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200",
+    icon: "text-red-600 dark:text-red-400",
     Icon: AlertCircle,
   },
   success: {
-    container: "border-emerald-200 bg-emerald-50 text-emerald-800",
-    icon: "text-emerald-600",
+    container:
+      "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-200",
+    icon: "text-emerald-600 dark:text-emerald-400",
     Icon: CheckCircle2,
   },
   info: {
-    container: "border-sky-200 bg-sky-50 text-sky-800",
-    icon: "text-sky-600",
+    container: "border-brand-500/30 bg-brand-50 text-foreground/80",
+    icon: "text-brand-500",
     Icon: Info,
   },
 };
@@ -47,7 +49,7 @@ export const AlertMessage = ({
   return (
     <div
       className={cn(
-        "flex gap-3 rounded-xl border px-4 py-3",
+        "flex gap-3 border px-4 py-3",
         styles.container,
         className,
       )}

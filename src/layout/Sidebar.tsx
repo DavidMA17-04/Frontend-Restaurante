@@ -1,4 +1,4 @@
-import { AppLink } from "@/shared/components/ui/Index";
+import { NavLink } from "react-router-dom";
 import { NAV_ITEMS, ROUTES } from "@/shared/constants/routeConstants";
 import { NAV_ICONS } from "@/shared/utils/navIcons";
 import { cn } from "@/shared/utils/cn";
@@ -7,25 +7,41 @@ import { cn } from "@/shared/utils/cn";
 export const Sidebar = () => {
   return (
     <aside className="hidden w-64 shrink-0 border-r border-border bg-surface lg:block">
-      <div className="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto px-4 py-6">
-        <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
-          Modulos
+      <div className="sticky top-[7.5rem] h-[calc(100vh-7.5rem)] overflow-y-auto px-4 py-8">
+        <p className="mb-4 px-3 text-[10px] font-medium uppercase tracking-[0.25em] text-brand-500">
+          Módulos
         </p>
-        <nav className="flex flex-col gap-1">
+        <nav className="flex flex-col gap-0.5">
           {NAV_ITEMS.map((item) => {
             const Icon = NAV_ICONS[item.icon];
 
             return (
-              <AppLink
+              <NavLink
                 key={item.path}
                 to={item.path}
                 end={item.path === ROUTES.home}
-                className="flex items-center gap-3 px-3 py-2.5"
-                activeClassName="shadow-sm"
+                className={({ isActive }) =>
+                  cn(
+                    "flex items-center gap-3 border border-transparent px-3 py-2.5 text-xs uppercase tracking-wider transition-colors",
+                    isActive
+                      ? "border-l-2 border-l-brand-500 bg-brand-50 pl-[10px] text-brand-600"
+                      : "text-muted hover:bg-brand-50/50 hover:text-foreground",
+                  )
+                }
               >
-                <Icon className="h-4 w-4 shrink-0" />
-                <span>{item.label}</span>
-              </AppLink>
+                {({ isActive }) => (
+                  <>
+                    <Icon
+                      className={cn(
+                        "h-4 w-4 shrink-0",
+                        isActive ? "text-brand-500" : "text-muted",
+                      )}
+                      strokeWidth={1.5}
+                    />
+                    <span>{item.label}</span>
+                  </>
+                )}
+              </NavLink>
             );
           })}
         </nav>
@@ -37,16 +53,23 @@ export const Sidebar = () => {
 /** Navegacion compacta para pantallas pequenas. */
 export const MobileNav = () => {
   return (
-    <nav className="flex gap-2 overflow-x-auto border-b border-border bg-surface px-4 py-3 lg:hidden">
+    <nav className="flex gap-1 overflow-x-auto border-b border-brand-500/20 bg-surface px-4 py-3 lg:hidden">
       {NAV_ITEMS.map((item) => (
-        <AppLink
+        <NavLink
           key={item.path}
           to={item.path}
           end={item.path === ROUTES.home}
-          className={cn("whitespace-nowrap px-3 py-2 text-xs")}
+          className={({ isActive }) =>
+            cn(
+              "whitespace-nowrap px-3 py-2 text-[10px] uppercase tracking-wider transition-colors",
+              isActive
+                ? "border-b-2 border-brand-500 text-brand-500"
+                : "text-muted hover:text-brand-500",
+            )
+          }
         >
           {item.label}
-        </AppLink>
+        </NavLink>
       ))}
     </nav>
   );

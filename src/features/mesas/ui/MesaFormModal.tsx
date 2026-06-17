@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { FormInput, FormSelect } from "@/shared/components/forms";
+import { FormInput } from "@/shared/components/forms";
 import { Button } from "@/shared/components/ui/Button";
 import { Modal } from "@/shared/components/ui/Modal";
 import type { Mesa, MesaCreateInput } from "../types/mesaType";
@@ -16,15 +16,7 @@ const emptyForm = {
   numero: "",
   capacidad: "",
   zonaId: "1",
-  estado: "Disponible",
 };
-
-const estadoOptions = [
-  { value: "Disponible", label: "Disponible" },
-  { value: "Ocupada", label: "Ocupada" },
-  { value: "Reservada", label: "Reservada" },
-  { value: "Bloqueada", label: "Bloqueada" },
-];
 
 /** Modal de crear/editar mesa. */
 export const MesaFormModal = ({
@@ -43,7 +35,6 @@ export const MesaFormModal = ({
         numero: String(item.numero),
         capacidad: String(item.capacidad),
         zonaId: String(item.zonaId),
-        estado: item.estado,
       });
     } else {
       setForm(emptyForm);
@@ -61,12 +52,7 @@ export const MesaFormModal = ({
       return;
     }
 
-    onSubmit({
-      numero,
-      capacidad,
-      zonaId,
-      estado: form.estado,
-    });
+    onSubmit({ numero, capacidad, zonaId });
   };
 
   return (
@@ -122,15 +108,6 @@ export const MesaFormModal = ({
           onChange={(event) =>
             setForm((prev) => ({ ...prev, zonaId: event.target.value }))
           }
-        />
-        <FormSelect
-          id="mesa-estado"
-          label="Estado"
-          value={form.estado}
-          onChange={(event) =>
-            setForm((prev) => ({ ...prev, estado: event.target.value }))
-          }
-          options={estadoOptions}
         />
       </form>
     </Modal>

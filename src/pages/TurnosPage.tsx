@@ -3,23 +3,30 @@ import { useMemo, useState } from "react";
 import {
   TurnoFormModal,
   TurnoTablePlaceholder,
+  useCreateTurno,
+  useDeleteTurno,
   useGetTurnos,
+  useUpdateTurno,
 } from "@/features/turnos";
-import type { Turno } from "@/features/turnos/types/turnoType";
+import type { Turno, TurnoCreateInput } from "@/features/turnos/types/turnoType";
 import {
   AlertMessage,
   Loader,
-  MockDataBanner,
   PageHeader,
 } from "@/shared/components/feedback";
 import { PageSectionCard } from "@/shared/components/layout/PageSectionCard";
 import { TableToolbar } from "@/shared/components/layout/TableToolbar";
 import { Button } from "@/shared/components/ui/Button";
+import { getApiErrorMessage } from "@/shared/utils/apiError";
 import { filterBySearch } from "@/shared/utils/filterBySearch";
 
-/** Vista del modulo Turnos. */
+/** Vista del modulo Turnos con CRUD completo. */
 export const TurnosPage = () => {
   const { data, isLoading, isError } = useGetTurnos();
+  const createMutation = useCreateTurno();
+  const updateMutation = useUpdateTurno();
+  const deleteMutation = useDeleteTurno();
+
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Turno | null>(null);
@@ -28,6 +35,10 @@ export const TurnosPage = () => {
     () => filterBySearch(data ?? [], search, ["nombre", "horaInicio", "horaFin"]),
     [data, search],
   );
+
+  const isSaving = createMutation.isPending || updateMutation.isPending;
+  const mutationError =
+    createMutation.error ?? updateMutation.error ?? deleteMutation.error;
 
   const openCreate = () => {
     setSelectedItem(null);
@@ -40,7 +51,25 @@ export const TurnosPage = () => {
   };
 
   const handleDelete = (item: Turno) => {
-    window.confirm(`¿Eliminar el turno "${item.nombre}"?`);
+    if (!window.confirm(`¿Eliminar el turno "${item.nombre}"?`)) {
+      return;
+    }
+
+    deleteMutation.mutate(item.id);
+  };
+
+  const handleFormSubmit = async (payload: TurnoCreateInput) => {
+    try {
+      if (selectedItem) {
+        await updateMutation.mutateAsync({ id: selectedItem.id, data: payload });
+      } else {
+        await createMutation.mutateAsync(payload);
+      }
+
+      closeModal();
+    } catch {
+      // El error se muestra via mutationError en la UI.
+    }
   };
 
   const closeModal = () => {
@@ -61,7 +90,14 @@ export const TurnosPage = () => {
         }
       />
 
-      <MockDataBanner entityName="Turnos" />
+      {mutationError && (
+        <AlertMessage
+          variant="error"
+          title="Error en la operacion"
+          message={getApiErrorMessage(mutationError)}
+          className="mb-6"
+        />
+      )}
 
       {isLoading && <Loader label="Cargando turnos..." />}
       {isError && (
@@ -87,7 +123,13 @@ export const TurnosPage = () => {
         </PageSectionCard>
       )}
 
-      <TurnoFormModal open={modalOpen} item={selectedItem} onClose={closeModal} />
+      <TurnoFormModal
+        open={modalOpen}
+        item={selectedItem}
+        onClose={closeModal}
+        onSubmit={handleFormSubmit}
+        isSubmitting={isSaving}
+      />
     </section>
   );
 };

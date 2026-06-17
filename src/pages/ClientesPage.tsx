@@ -15,16 +15,13 @@ import type {
 import {
   AlertMessage,
   Loader,
-  MockDataBanner,
   PageHeader,
 } from "@/shared/components/feedback";
 import { PageSectionCard } from "@/shared/components/layout/PageSectionCard";
 import { TableToolbar } from "@/shared/components/layout/TableToolbar";
 import { Button } from "@/shared/components/ui/Button";
+import { getApiErrorMessage } from "@/shared/utils/apiError";
 import { filterBySearch } from "@/shared/utils/filterBySearch";
-
-const getMutationErrorMessage = (error: unknown) =>
-  error instanceof Error ? error.message : "Ocurrio un error inesperado.";
 
 /** Vista del modulo Clientes con CRUD completo. */
 export const ClientesPage = () => {
@@ -39,7 +36,12 @@ export const ClientesPage = () => {
 
   const filteredData = useMemo(
     () =>
-      filterBySearch(data ?? [], search, ["nombre", "email", "telefono"]),
+      filterBySearch(data ?? [], search, [
+        "nombre",
+        "apellido",
+        "telefono",
+        "cedula",
+      ]),
     [data, search],
   );
 
@@ -97,13 +99,11 @@ export const ClientesPage = () => {
         }
       />
 
-      <MockDataBanner entityName="Clientes" />
-
       {mutationError && (
         <AlertMessage
           variant="error"
           title="Error en la operacion"
-          message={getMutationErrorMessage(mutationError)}
+          message={getApiErrorMessage(mutationError)}
           className="mb-6"
         />
       )}
@@ -122,12 +122,12 @@ export const ClientesPage = () => {
       {!isLoading && !isError && (
         <PageSectionCard
           title="Listado de clientes"
-          description="Vista preparada para mostrar nombre, email y telefono."
+          description="Nombre, apellido, telefono y cedula del cliente."
         >
           <TableToolbar
             searchValue={search}
             onSearchChange={setSearch}
-            searchPlaceholder="Buscar por nombre, email o telefono..."
+            searchPlaceholder="Buscar por nombre, apellido, telefono o cedula..."
           />
           <ClienteTablePlaceholder
             data={filteredData}

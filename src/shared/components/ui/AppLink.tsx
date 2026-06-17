@@ -26,10 +26,10 @@ export const AppLink = ({
       end={end}
       className={({ isActive }) =>
         cn(
-          "rounded-lg text-sm font-medium transition-colors",
+          "text-sm font-medium transition-colors",
           isActive
-            ? cn("bg-brand-600 text-white shadow-sm", activeClassName)
-            : "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
+            ? cn("text-foreground", activeClassName)
+            : "text-muted hover:text-foreground",
           className,
         )
       }

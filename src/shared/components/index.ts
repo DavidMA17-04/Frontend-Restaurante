@@ -6,7 +6,7 @@ export { SearchInput } from "./ui/SearchInput";
 export { FormInput, FormSelect } from "./forms";
 export type { SelectOption } from "./forms";
 export { DataTable } from "./tables";
-export { Loader, EmptyState, AlertMessage, PageHeader, MockDataBanner } from "./feedback";
+export { Loader, EmptyState, AlertMessage, PageHeader } from "./feedback";
 export { StatCard } from "./layout/StatCard";
 export { PageSectionCard } from "./layout/PageSectionCard";
 export { TableToolbar } from "./layout/TableToolbar";
