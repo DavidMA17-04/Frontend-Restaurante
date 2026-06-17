@@ -17,7 +17,7 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
       onClick={toggleTheme}
       aria-label={isDark ? "Activar tema claro" : "Activar tema oscuro"}
       className={cn(
-        "flex h-10 w-10 items-center justify-center border border-border text-foreground transition-colors hover:bg-foreground/5",
+        "flex h-10 w-10 items-center justify-center text-foreground transition-colors hover:text-brand-500",
         className,
       )}
     >

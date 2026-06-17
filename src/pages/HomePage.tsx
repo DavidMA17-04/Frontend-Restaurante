@@ -118,9 +118,7 @@ export const HomePage = () => {
               <Link key={module.path} to={module.path} className="group">
                 <Card className="h-full border-t-2 border-t-brand-500/60 transition-all duration-200 hover:border-brand-500/60">
                   <div className="flex items-start justify-between gap-4">
-                    <div className="flex h-11 w-11 items-center justify-center border border-brand-500/30 bg-brand-50 text-brand-500">
-                      <Icon className="h-5 w-5" strokeWidth={1.5} />
-                    </div>
+                    <Icon className="h-5 w-5 text-brand-500" strokeWidth={1.5} />
                     <ArrowRight className="h-4 w-4 text-muted transition-transform group-hover:translate-x-1 group-hover:text-brand-500" />
                   </div>
                   <h3 className="mt-4 font-serif text-lg text-foreground">

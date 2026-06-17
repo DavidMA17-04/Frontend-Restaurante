@@ -23,9 +23,7 @@ export const EmptyState = ({
         className,
       )}
     >
-      <div className="mb-4 flex h-12 w-12 items-center justify-center border border-border bg-foreground/5 text-muted">
-        <Inbox className="h-6 w-6" />
-      </div>
+      <Inbox className="mb-4 h-10 w-10 text-muted" />
       <h3 className="font-serif text-base text-foreground">{title}</h3>
       <p className="mt-2 max-w-md text-sm text-muted">{message}</p>
       {action && <div className="mt-4">{action}</div>}

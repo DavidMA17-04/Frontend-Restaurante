@@ -30,7 +30,7 @@ export const ListaEsperaTablePlaceholder = ({
       id: "acciones",
       header: "Acciones",
       cell: ({ row }) => (
-        <div className="flex items-center justify-end gap-1">
+        <div className="flex items-center justify-center gap-1">
           <Button
             type="button"
             variant="ghost"
@@ -41,7 +41,7 @@ export const ListaEsperaTablePlaceholder = ({
           </Button>
           <Button
             type="button"
-            variant="secondary"
+            variant="success"
             size="sm"
             onClick={() => onPromover(row.original)}
           >

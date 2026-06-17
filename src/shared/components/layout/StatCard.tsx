@@ -26,9 +26,7 @@ export const StatCard = ({ label, value, icon: Icon, className }: StatCardProps)
             {value}
           </p>
         </div>
-        <div className="flex h-10 w-10 items-center justify-center border border-brand-500/30 bg-brand-50 text-brand-500">
-          <Icon className="h-5 w-5" strokeWidth={1.5} />
-        </div>
+        <Icon className="h-5 w-5 shrink-0 text-brand-500" strokeWidth={1.5} />
       </div>
     </div>
   );

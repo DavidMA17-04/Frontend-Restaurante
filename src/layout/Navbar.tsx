@@ -15,9 +15,7 @@ export const Navbar = () => {
       <div className="border-b border-brand-500/25 px-4 py-4 sm:px-6">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center border border-brand-500/40 bg-brand-50">
-              <UtensilsCrossed className="h-5 w-5 text-brand-500" strokeWidth={1.5} />
-            </div>
+            <UtensilsCrossed className="h-6 w-6 text-brand-500" strokeWidth={1.5} />
           </div>
 
           <div className="hidden flex-1 text-center md:block">

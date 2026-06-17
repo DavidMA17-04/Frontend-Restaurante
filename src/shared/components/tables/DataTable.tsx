@@ -40,7 +40,7 @@ export const DataTable = <T,>({
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="px-4 py-3 text-left text-[10px] font-medium uppercase tracking-[0.15em] text-brand-600 dark:text-brand-500"
+                    className="px-4 py-3 text-center text-[10px] font-medium uppercase tracking-[0.15em] text-brand-600 dark:text-brand-500"
                   >
                     {header.isPlaceholder
                       ? null
@@ -62,7 +62,7 @@ export const DataTable = <T,>({
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}
-                    className="px-4 py-3 text-sm text-foreground/85"
+                    className="px-4 py-3 text-center text-sm text-foreground/85"
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>

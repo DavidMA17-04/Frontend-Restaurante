@@ -9,7 +9,7 @@ interface TableRowActionsProps {
 /** Acciones de fila para editar o eliminar un registro. */
 export const TableRowActions = ({ onEdit, onDelete }: TableRowActionsProps) => {
   return (
-    <div className="flex items-center justify-end gap-1">
+    <div className="flex items-center justify-center gap-1">
       <Button
         type="button"
         variant="ghost"
