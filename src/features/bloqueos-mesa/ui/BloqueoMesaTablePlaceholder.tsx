@@ -1,37 +1,48 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/shared/components/tables";
-import { formatDate } from "@/shared/utils/formatDate";
+import { TableRowActions } from "@/shared/components/layout/TableRowActions";
+import { formatDateTimeParts } from "@/shared/utils/dateTime";
 import type { BloqueoMesa } from "../types/bloqueoMesaType";
 
 interface BloqueoMesaTablePlaceholderProps {
   data: BloqueoMesa[];
+  onEdit: (item: BloqueoMesa) => void;
+  onDelete: (item: BloqueoMesa) => void;
 }
 
-const columns: ColumnDef<BloqueoMesa>[] = [
-  { accessorKey: "id", header: "ID" },
-  { accessorKey: "mesaId", header: "Mesa" },
-  {
-    accessorKey: "fechaInicio",
-    header: "Inicio",
-    cell: (info) => formatDate(info.getValue<string>()),
-  },
-  {
-    accessorKey: "fechaFin",
-    header: "Fin",
-    cell: (info) => formatDate(info.getValue<string>()),
-  },
-  { accessorKey: "motivo", header: "Motivo" },
-];
-
-/** Componente de negocio del modulo Bloqueos de Mesa. */
 export const BloqueoMesaTablePlaceholder = ({
   data,
+  onEdit,
+  onDelete,
 }: BloqueoMesaTablePlaceholderProps) => {
+  const columns: ColumnDef<BloqueoMesa>[] = [
+    { accessorKey: "id", header: "ID" },
+    { accessorKey: "mesaId", header: "Mesa" },
+    {
+      id: "fechaHorario",
+      header: "Fecha y horario",
+      cell: ({ row }) =>
+        formatDateTimeParts(row.original.fecha, row.original.horaInicio) +
+        ` - ${row.original.horaFin.slice(0, 5)}`,
+    },
+    { accessorKey: "motivo", header: "Motivo" },
+    {
+      id: "acciones",
+      header: "Acciones",
+      cell: ({ row }) => (
+        <TableRowActions
+          onEdit={() => onEdit(row.original)}
+          onDelete={() => onDelete(row.original)}
+        />
+      ),
+    },
+  ];
+
   return (
     <DataTable
       data={data}
       columns={columns}
-      emptyMessage="Aun no hay bloqueos. La integracion con el backend se realizara en la siguiente etapa."
+      emptyMessage="Aun no hay bloqueos registrados."
     />
   );
 };

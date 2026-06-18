@@ -11,4 +11,5 @@ export const QUERY_KEYS = {
   zonas: "zonas",
   bloqueosMesa: "bloqueos-mesa",
   listaEspera: "lista-espera",
+  estados: "estados",
 } as const;

@@ -1,10 +1,15 @@
 /**
  * Representa una entrada en la lista de espera del restaurante.
- * Los campos se alinearan con el DTO del backend ASP.NET Core.
+ * Alineado con ListaEsperaResponseDTO / ListaEsperaCreateDTO del backend.
  */
 export interface ListaEspera {
   id: number;
   clienteId: number;
-  fechaRegistro: string;
-  estado: string;
+  fecha: string;
+  horaInicio: string;
+  horaFin: string;
+  cantidad: number;
 }
+
+export type ListaEsperaCreateInput = Omit<ListaEspera, "id">;
+export type ListaEsperaUpdateInput = Partial<ListaEsperaCreateInput>;

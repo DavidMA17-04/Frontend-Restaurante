@@ -8,3 +8,6 @@ export interface Empleado {
   rol: string;
   activo: boolean;
 }
+
+export type EmpleadoCreateInput = Omit<Empleado, "id">;
+export type EmpleadoUpdateInput = Partial<EmpleadoCreateInput>;

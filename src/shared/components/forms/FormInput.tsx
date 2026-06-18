@@ -1,34 +1,41 @@
 import type { InputHTMLAttributes } from "react";
+import { cn } from "@/shared/utils/cn";
 
 interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
 }
 
-/**
- * Campo de formulario reutilizable basado en props HTML nativas.
- * En la fase de CRUD se conectara a la libreria de formularios elegida.
- */
+/** Campo de formulario reutilizable con estilos Tailwind. */
 export const FormInput = ({
   label,
   error,
-  className = "",
+  className,
   id,
   ...props
 }: FormInputProps) => {
   return (
-    <div className="form-group">
+    <div className="flex flex-col gap-1.5">
       {label && (
-        <label className="form-label" htmlFor={id}>
+        <label
+          className="text-xs font-medium uppercase tracking-wider text-muted"
+          htmlFor={id}
+        >
           {label}
         </label>
       )}
       <input
         id={id}
-        className={`form-input ${error ? "form-input--error" : ""} ${className}`.trim()}
+        className={cn(
+          "w-full border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted/60 transition-colors focus:outline-none focus:ring-4",
+          error
+            ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
+            : "border-border focus:border-brand-500 focus:ring-brand-500/10",
+          className,
+        )}
         {...props}
       />
-      {error && <span className="form-error">{error}</span>}
+      {error && <span className="text-xs text-red-400">{error}</span>}
     </div>
   );
 };

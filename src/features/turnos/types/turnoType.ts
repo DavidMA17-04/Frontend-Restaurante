@@ -1,10 +1,14 @@
 /**
  * Representa un turno de trabajo del restaurante.
- * Los campos se alinearan con el DTO del backend ASP.NET Core.
+ * Alineado con la entidad Turno del backend.
  */
 export interface Turno {
   id: number;
   nombre: string;
   horaInicio: string;
   horaFin: string;
+  activo: boolean;
 }
+
+export type TurnoCreateInput = Omit<Turno, "id">;
+export type TurnoUpdateInput = Partial<TurnoCreateInput>;

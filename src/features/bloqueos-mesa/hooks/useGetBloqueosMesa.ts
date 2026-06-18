@@ -3,14 +3,11 @@ import { QUERY_KEYS } from "@/shared/constants/queryKeyConstants";
 import { getBloqueosMesa } from "../services/bloqueoMesaService";
 import type { BloqueoMesa } from "../types/bloqueoMesaType";
 
-/**
- * Hook que encapsula la consulta de bloqueos de mesa con TanStack Query.
- * enabled: false hasta integrar el backend (etapa posterior).
- */
+/** Hook que encapsula la consulta de bloqueos de mesa con TanStack Query. */
 export const useGetBloqueosMesa = () => {
   return useQuery<BloqueoMesa[]>({
     queryKey: [QUERY_KEYS.bloqueosMesa],
     queryFn: getBloqueosMesa,
-    enabled: false,
+    enabled: true,
   });
 };

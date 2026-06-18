@@ -1,11 +1,15 @@
 /**
- * Representa un bloqueo temporal de una mesa (mantenimiento, evento, etc.).
- * Los campos se alinearan con el DTO del backend ASP.NET Core.
+ * Representa un bloqueo temporal de una mesa.
+ * Alineado con BloqueoResponseDTO / BloqueoCreateDTO del backend.
  */
 export interface BloqueoMesa {
   id: number;
   mesaId: number;
-  fechaInicio: string;
-  fechaFin: string;
+  fecha: string;
+  horaInicio: string;
+  horaFin: string;
   motivo: string;
 }
+
+export type BloqueoMesaCreateInput = Omit<BloqueoMesa, "id">;
+export type BloqueoMesaUpdateInput = Partial<BloqueoMesaCreateInput>;
