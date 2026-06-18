@@ -19,8 +19,7 @@ import { NAV_ICONS } from "@/shared/utils/navIcons";
 import { formatDateTimeParts } from "@/shared/utils/dateTime";
 import { getEstadoBadgeVariant } from "@/shared/utils/statusBadge";
 
-const HERO_IMAGE =
-  "https://images.unsplash.com/photo-1514933650353-0059814c72d8?w=1600&q=80";
+const HERO_IMAGE = "/images/hero-restaurant.jpg";
 
 /** Pagina de inicio con metricas y acceso rapido a cada modulo. */
 export const HomePage = () => {
@@ -45,7 +44,6 @@ export const HomePage = () => {
       <PageHeader
         category="Inicio"
         title="Panel principal"
-        subtitle="Resumen operativo del restaurante."
       />
 
       <div className="relative -mx-4 mb-10 overflow-hidden sm:-mx-6 lg:-mx-10">
