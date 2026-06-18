@@ -1,7 +1,7 @@
 # Sistema Restaurante - Frontend
 
 Frontend del Sistema de Gestion de Restaurante para el curso **Programacion IV**.
-Consume una API REST desarrollada en ASP.NET Core.
+Consume una API REST desarrollada en ASP.NET Core (RestauranteAPI).
 
 ## Stack
 
@@ -10,24 +10,52 @@ React + TypeScript, Vite, React Router, Axios, TanStack Query, TanStack Table y 
 ## Requisitos
 
 - Node.js 18+ y npm.
+- .NET 9 SDK (para ejecutar RestauranteAPI).
 
 ## Configuracion
 
-1. Instalar dependencias:
+1. Instalar dependencias del frontend:
 
    ```bash
    npm install
    ```
 
-2. Crear el archivo `.env` a partir del ejemplo y ajustar la URL del backend:
+2. Crear el archivo `.env` a partir del ejemplo:
 
    ```bash
    cp .env.example .env
    ```
 
+3. Ajustar variables para conectar con el backend local:
+
+   ```env
+   VITE_API_URL=http://localhost:5052/api
+   VITE_USE_MOCK=false
    ```
-   VITE_API_URL=http://localhost:5000/api
+
+   - `VITE_USE_MOCK=true` usa datos inventados en memoria (util sin backend).
+   - `VITE_USE_MOCK=false` consume la API real en `VITE_API_URL`.
+
+## Conectar con RestauranteAPI
+
+1. Levantar el backend (puerto **5052** por defecto):
+
+   ```bash
+   cd "../Proyecto Final/backend/RestauranteAPI"
+   dotnet run
    ```
+
+2. Verificar que responde, por ejemplo: `http://localhost:5052/api/Clientes`
+
+3. Reiniciar el frontend (Vite lee `.env` solo al arrancar):
+
+   ```bash
+   npm run dev
+   ```
+
+4. Abrir `http://localhost:5173` y probar los modulos CRUD.
+
+**Nota:** El modulo Empleados no tiene endpoint en RestauranteAPI; solo funciona con `VITE_USE_MOCK=true`.
 
 ## Scripts
 
@@ -45,6 +73,4 @@ React + TypeScript, Vite, React Router, Axios, TanStack Query, TanStack Table y 
 
 ## Estado actual
 
-Plantilla base compilable. La integracion real con el backend (CRUD, validaciones,
-peticiones HTTP activas) se realizara en etapas posteriores; los hooks de datos usan
-`enabled: false` para no disparar peticiones mientras el backend no este conectado.
+Integracion HTTP activa con RestauranteAPI via Axios y TanStack Query. Los servicios alternan entre mocks y API real segun `VITE_USE_MOCK`.
