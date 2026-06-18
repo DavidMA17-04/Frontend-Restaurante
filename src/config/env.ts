@@ -25,5 +25,5 @@ const parseBooleanEnv = (
 export const env = {
   apiUrl: import.meta.env.VITE_API_URL ?? "http://localhost:5052/api",
   /** Por defecto true en desarrollo si la variable no esta definida. */
-  useMock: parseBooleanEnv(import.meta.env.VITE_USE_MOCK, true),
+  useMock: parseBooleanEnv(import.meta.env.VITE_USE_MOCK, import.meta.env.DEV),
 } as const;
