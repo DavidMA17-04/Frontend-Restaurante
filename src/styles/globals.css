@@ -6,18 +6,20 @@
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
 
-  --color-brand-50: rgba(201, 169, 98, 0.12);
-  --color-brand-100: rgba(201, 169, 98, 0.2);
+  --color-brand-50: rgba(201, 169, 98, 0.18);
+  --color-brand-100: rgba(201, 169, 98, 0.28);
   --color-brand-500: #c9a962;
   --color-brand-600: #b8943f;
   --color-brand-700: #9a7a32;
 
-  --color-bg: #f8fafc;
-  --color-surface: #ffffff;
+  --color-bg: #f5f0e8;
+  --color-surface: #fffdf9;
   --color-surface-elevated: #ffffff;
-  --color-foreground: #0f172a;
-  --color-muted: #64748b;
-  --color-border: #e2e8f0;
+  --color-surface-muted: #faf6ef;
+  --color-surface-hover: #f5efe3;
+  --color-foreground: #1c1917;
+  --color-muted: #78716c;
+  --color-border: #e7e0d4;
 }
 
 .dark {
@@ -26,6 +28,8 @@
   --color-bg: #000000;
   --color-surface: #0a0a0a;
   --color-surface-elevated: #141414;
+  --color-surface-muted: #141414;
+  --color-surface-hover: rgba(201, 169, 98, 0.08);
   --color-foreground: #ffffff;
   --color-muted: rgba(255, 255, 255, 0.55);
   --color-border: rgba(255, 255, 255, 0.12);

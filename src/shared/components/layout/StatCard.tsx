@@ -13,20 +13,20 @@ export const StatCard = ({ label, value, icon: Icon, className }: StatCardProps)
   return (
     <div
       className={cn(
-        "border border-border border-t-2 border-t-brand-500 bg-surface-elevated p-5",
+        "border border-border border-t-2 border-t-brand-500 bg-surface-elevated p-5 shadow-sm dark:shadow-none",
         className,
       )}
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-brand-500/80">
+          <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-brand-600 dark:text-brand-500/80">
             {label}
           </p>
-          <p className="mt-2 font-serif text-3xl tracking-wide text-brand-500">
+          <p className="mt-2 font-serif text-3xl tracking-wide text-foreground dark:text-brand-500">
             {value}
           </p>
         </div>
-        <Icon className="h-5 w-5 shrink-0 text-brand-500" strokeWidth={1.5} />
+        <Icon className="h-5 w-5 shrink-0 text-brand-600 dark:text-brand-500" strokeWidth={1.5} />
       </div>
     </div>
   );

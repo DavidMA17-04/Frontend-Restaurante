@@ -52,7 +52,7 @@ export const HomePage = () => {
           alt="Interior del restaurante La Reserva"
           className="h-56 w-full object-cover md:h-80"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-brand-500/15 to-brand-500/5" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-brand-500/10 to-transparent dark:from-black/80 dark:via-brand-500/15 dark:to-brand-500/5" />
       </div>
 
       <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -71,8 +71,8 @@ export const HomePage = () => {
       </div>
 
       {ultimasReservas.length > 0 && (
-        <div className="mb-8 overflow-hidden border border-border border-t-2 border-t-brand-500 bg-surface-elevated">
-          <div className="border-b border-brand-500/15 bg-brand-50/40 px-6 py-4 dark:bg-brand-50/20">
+        <div className="mb-8 overflow-hidden border border-border border-t-2 border-t-brand-500 bg-surface-elevated shadow-sm dark:shadow-none">
+          <div className="border-b border-brand-500/15 bg-surface-muted px-6 py-4 dark:bg-brand-50/20">
             <h2 className="text-xs font-medium uppercase tracking-[0.15em] text-brand-600 dark:text-brand-500">
               Reservas recientes
             </h2>
@@ -105,7 +105,7 @@ export const HomePage = () => {
       )}
 
       <div>
-        <h2 className="mb-4 font-serif text-sm uppercase tracking-[0.15em] text-brand-500">
+        <h2 className="mb-4 font-serif text-sm uppercase tracking-[0.15em] text-brand-600 dark:text-brand-500">
           Accesos rapidos
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -116,7 +116,7 @@ export const HomePage = () => {
               <Link key={module.path} to={module.path} className="group">
                 <Card className="h-full border-t-2 border-t-brand-500/60 transition-all duration-200 hover:border-brand-500/60">
                   <div className="flex items-start justify-between gap-4">
-                    <Icon className="h-5 w-5 text-brand-500" strokeWidth={1.5} />
+                    <Icon className="h-5 w-5 text-brand-600 dark:text-brand-500" strokeWidth={1.5} />
                     <ArrowRight className="h-4 w-4 text-muted transition-transform group-hover:translate-x-1 group-hover:text-brand-500" />
                   </div>
                   <h3 className="mt-4 font-serif text-lg text-foreground">

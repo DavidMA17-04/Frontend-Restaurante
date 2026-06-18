@@ -31,10 +31,10 @@ export const DataTable = <T,>({
   }
 
   return (
-    <div className="overflow-hidden border border-border bg-surface-elevated">
+    <div className="overflow-hidden border border-border bg-surface-elevated shadow-sm dark:shadow-none">
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-border">
-          <thead className="border-b border-brand-500/30 bg-brand-50/60 dark:bg-brand-50/30">
+          <thead className="border-b border-brand-500/30 bg-surface-muted dark:bg-brand-50/30">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -57,7 +57,7 @@ export const DataTable = <T,>({
             {table.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}
-                className="transition-colors hover:bg-brand-50/40 dark:hover:bg-brand-50/20"
+                className="transition-colors hover:bg-surface-hover dark:hover:bg-brand-50/20"
               >
                 {row.getVisibleCells().map((cell) => (
                   <td

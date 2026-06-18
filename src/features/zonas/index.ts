@@ -1,5 +1,6 @@
 export { ZonaTablePlaceholder } from "./ui/ZonaTablePlaceholder";
 export { ZonaFormModal } from "./ui/ZonaFormModal";
+export { ZonaMapView } from "./ui/ZonaMapView";
 export { useGetZonas } from "./hooks/useGetZonas";
 export {
   useCreateZona,

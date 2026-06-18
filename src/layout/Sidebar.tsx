@@ -24,8 +24,8 @@ export const Sidebar = () => {
                   cn(
                     "flex items-center gap-3 border border-transparent px-3 py-2.5 text-xs uppercase tracking-wider transition-colors",
                     isActive
-                      ? "border-l-2 border-l-brand-500 bg-brand-50 pl-[10px] text-brand-600"
-                      : "text-muted hover:bg-brand-50/50 hover:text-foreground",
+                      ? "border-l-2 border-l-brand-500 bg-brand-50 pl-[10px] text-brand-600 dark:text-brand-600"
+                      : "text-muted hover:bg-surface-hover hover:text-foreground dark:hover:bg-brand-50/50",
                   )
                 }
               >

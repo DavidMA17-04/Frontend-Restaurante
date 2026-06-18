@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { LayoutGrid, Plus, Table2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
   useCreateZona,
@@ -6,6 +6,7 @@ import {
   useGetZonas,
   useUpdateZona,
   ZonaFormModal,
+  ZonaMapView,
   ZonaTablePlaceholder,
 } from "@/features/zonas";
 import type { Zona, ZonaCreateInput } from "@/features/zonas/types/zonaType";
@@ -18,15 +19,19 @@ import { PageSectionCard } from "@/shared/components/layout/PageSectionCard";
 import { TableToolbar } from "@/shared/components/layout/TableToolbar";
 import { Button } from "@/shared/components/ui/Button";
 import { getApiErrorMessage } from "@/shared/utils/apiError";
+import { cn } from "@/shared/utils/cn";
 import { filterBySearch } from "@/shared/utils/filterBySearch";
 
-/** Vista del modulo Zonas con CRUD completo. */
+type ViewMode = "listado" | "mapa";
+
+/** Vista del modulo Zonas con CRUD completo y mapa interactivo. */
 export const ZonasPage = () => {
   const { data, isLoading, isError } = useGetZonas();
   const createMutation = useCreateZona();
   const updateMutation = useUpdateZona();
   const deleteMutation = useDeleteZona();
 
+  const [viewMode, setViewMode] = useState<ViewMode>("listado");
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Zona | null>(null);
@@ -83,14 +88,45 @@ export const ZonasPage = () => {
         title="Zonas"
         subtitle="Areas del restaurante (terraza, salon, etc.)."
         actions={
-          <Button variant="primary" onClick={openCreate}>
-            <Plus className="h-4 w-4" />
-            Nueva zona
-          </Button>
+          viewMode === "listado" ? (
+            <Button variant="primary" onClick={openCreate}>
+              <Plus className="h-4 w-4" />
+              Nueva zona
+            </Button>
+          ) : undefined
         }
       />
 
-      {mutationError && (
+      <div className="mb-6 flex gap-2 border-b border-border">
+        <button
+          type="button"
+          className={cn(
+            "flex items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-medium transition-colors",
+            viewMode === "listado"
+              ? "border-brand-500 text-brand-600 dark:text-brand-500"
+              : "border-transparent text-muted hover:text-foreground",
+          )}
+          onClick={() => setViewMode("listado")}
+        >
+          <Table2 className="h-4 w-4" />
+          Listado
+        </button>
+        <button
+          type="button"
+          className={cn(
+            "flex items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-medium transition-colors",
+            viewMode === "mapa"
+              ? "border-brand-500 text-brand-600 dark:text-brand-500"
+              : "border-transparent text-muted hover:text-foreground",
+          )}
+          onClick={() => setViewMode("mapa")}
+        >
+          <LayoutGrid className="h-4 w-4" />
+          Mapa del salon
+        </button>
+      </div>
+
+      {mutationError && viewMode === "listado" && (
         <AlertMessage
           variant="error"
           title="Error en la operacion"
@@ -99,28 +135,34 @@ export const ZonasPage = () => {
         />
       )}
 
-      {isLoading && <Loader label="Cargando zonas..." />}
-      {isError && (
-        <AlertMessage
-          variant="error"
-          message="Error al cargar zonas."
-          className="mb-6"
-        />
-      )}
+      {viewMode === "mapa" && <ZonaMapView />}
 
-      {!isLoading && !isError && (
-        <PageSectionCard title="Listado de zonas">
-          <TableToolbar
-            searchValue={search}
-            onSearchChange={setSearch}
-            searchPlaceholder="Buscar por nombre..."
-          />
-          <ZonaTablePlaceholder
-            data={filteredData}
-            onEdit={openEdit}
-            onDelete={handleDelete}
-          />
-        </PageSectionCard>
+      {viewMode === "listado" && (
+        <>
+          {isLoading && <Loader label="Cargando zonas..." />}
+          {isError && (
+            <AlertMessage
+              variant="error"
+              message="Error al cargar zonas."
+              className="mb-6"
+            />
+          )}
+
+          {!isLoading && !isError && (
+            <PageSectionCard title="Listado de zonas">
+              <TableToolbar
+                searchValue={search}
+                onSearchChange={setSearch}
+                searchPlaceholder="Buscar por nombre..."
+              />
+              <ZonaTablePlaceholder
+                data={filteredData}
+                onEdit={openEdit}
+                onDelete={handleDelete}
+              />
+            </PageSectionCard>
+          )}
+        </>
       )}
 
       <ZonaFormModal
