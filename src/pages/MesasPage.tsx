@@ -9,6 +9,7 @@ import {
   useUpdateMesa,
 } from "@/features/mesas";
 import type { Mesa, MesaCreateInput } from "@/features/mesas/types/mesaType";
+import { useGetZonas } from "@/features/zonas";
 import {
   AlertMessage,
   Loader,
@@ -18,24 +19,40 @@ import { PageSectionCard } from "@/shared/components/layout/PageSectionCard";
 import { TableToolbar } from "@/shared/components/layout/TableToolbar";
 import { Button } from "@/shared/components/ui/Button";
 import { getApiErrorMessage } from "@/shared/utils/apiError";
-import { filterBySearch } from "@/shared/utils/filterBySearch";
-
+import { useConfirmDialog } from "@/shared/hooks/useConfirmDialog";
 /** Vista del modulo Mesas con CRUD completo. */
 export const MesasPage = () => {
   const { data, isLoading, isError } = useGetMesas();
+  const { data: zonas } = useGetZonas();
   const createMutation = useCreateMesa();
   const updateMutation = useUpdateMesa();
   const deleteMutation = useDeleteMesa();
+  const { confirm, confirmDialog } = useConfirmDialog();
 
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Mesa | null>(null);
 
-  const filteredData = useMemo(
-    () =>
-      filterBySearch(data ?? [], search, ["numero", "capacidad", "zonaId"]),
-    [data, search],
-  );
+  const filteredData = useMemo(() => {
+    const items = data ?? [];
+    const trimmed = search.trim().toLowerCase();
+
+    if (!trimmed) {
+      return items;
+    }
+
+    const zonasById = new Map(
+      (zonas ?? []).map((zona) => [zona.id, zona.nombre.toLowerCase()]),
+    );
+
+    return items.filter(
+      (mesa) =>
+        String(mesa.numero).includes(trimmed) ||
+        String(mesa.capacidad).includes(trimmed) ||
+        String(mesa.zonaId).includes(trimmed) ||
+        (zonasById.get(mesa.zonaId) ?? "").includes(trimmed),
+    );
+  }, [data, search, zonas]);
 
   const isSaving = createMutation.isPending || updateMutation.isPending;
   const mutationError =
@@ -52,11 +69,11 @@ export const MesasPage = () => {
   };
 
   const handleDelete = (item: Mesa) => {
-    if (!window.confirm(`¿Eliminar la mesa #${item.numero}?`)) {
-      return;
-    }
-
-    deleteMutation.mutate(item.id);
+    confirm({
+      title: "Eliminar mesa",
+      message: `¿Eliminar la mesa #${item.numero}? También se eliminarán sus reservas y bloqueos asociados.`,
+      onConfirm: () => deleteMutation.mutate(item.id),
+    });
   };
 
   const handleFormSubmit = async (payload: MesaCreateInput) => {
@@ -80,9 +97,10 @@ export const MesasPage = () => {
 
   return (
     <section>
+      {confirmDialog}
       <PageHeader
         title="Mesas"
-        subtitle="Listado de mesas del restaurante."
+        subtitle="Configura capacidad, número y zona de cada mesa del establecimiento."
         actions={
           <Button variant="primary" onClick={openCreate}>
             <Plus className="h-4 w-4" />

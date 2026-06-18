@@ -1,5 +1,7 @@
 import axiosInstance from "@/config/axios";
+import { bloqueosStore } from "@/mocks/stores/bloqueosStore";
 import { mesasStore } from "@/mocks/stores/mesasStore";
+import { reservasStore } from "@/mocks/stores/reservasStore";
 import { API_ENDPOINTS } from "@/shared/constants/apiConstants";
 import {
   resolveMockOrFetch,
@@ -73,6 +75,16 @@ export const updateMesa = async ({
 export const deleteMesa = async (id: number): Promise<void> => {
   return resolveMockOrMutate(
     () => {
+      reservasStore
+        .getAll()
+        .filter((reserva) => reserva.mesaId === id)
+        .forEach((reserva) => reservasStore.remove(reserva.id));
+
+      bloqueosStore
+        .getAll()
+        .filter((bloqueo) => bloqueo.mesaId === id)
+        .forEach((bloqueo) => bloqueosStore.remove(bloqueo.id));
+
       mesasStore.remove(id);
     },
     async () => {

@@ -11,11 +11,11 @@ interface BadgeProps {
 
 const variantStyles: Record<BadgeVariant, string> = {
   success:
-    "bg-emerald-50 text-emerald-700 ring-emerald-600/20 dark:bg-emerald-950/60 dark:text-emerald-300 dark:ring-emerald-500/30",
+    "bg-status-success-muted text-status-success ring-status-success/25 dark:ring-status-success/35",
   warning:
-    "bg-amber-50 text-amber-700 ring-amber-600/20 dark:bg-amber-950/60 dark:text-amber-300 dark:ring-amber-500/30",
+    "bg-status-warning-muted text-status-warning ring-status-warning/25 dark:ring-status-warning/35",
   danger:
-    "bg-red-50 text-red-700 ring-red-600/20 dark:bg-red-950/60 dark:text-red-300 dark:ring-red-500/30",
+    "bg-status-danger-muted text-status-danger ring-status-danger/25 dark:ring-status-danger/35",
   info: "bg-sky-50 text-sky-700 ring-sky-600/20 dark:bg-sky-950/60 dark:text-sky-300 dark:ring-sky-500/30",
   neutral:
     "bg-slate-100 text-slate-700 ring-slate-600/10 dark:bg-white/10 dark:text-white/70 dark:ring-white/20",

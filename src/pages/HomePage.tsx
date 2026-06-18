@@ -44,6 +44,7 @@ export const HomePage = () => {
       <PageHeader
         category="Inicio"
         title="Panel principal"
+        subtitle="Resumen del día: reservas, mesas, clientes y acceso rápido a cada área de gestión."
       />
 
       <div className="relative -mx-4 mb-10 overflow-hidden sm:-mx-6 lg:-mx-10">

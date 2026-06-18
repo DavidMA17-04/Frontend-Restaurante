@@ -19,6 +19,7 @@ import { TableToolbar } from "@/shared/components/layout/TableToolbar";
 import { Button } from "@/shared/components/ui/Button";
 import { getApiErrorMessage } from "@/shared/utils/apiError";
 import { filterBySearch } from "@/shared/utils/filterBySearch";
+import { useConfirmDialog } from "@/shared/hooks/useConfirmDialog";
 
 /** Vista del modulo Turnos con CRUD completo. */
 export const TurnosPage = () => {
@@ -26,6 +27,7 @@ export const TurnosPage = () => {
   const createMutation = useCreateTurno();
   const updateMutation = useUpdateTurno();
   const deleteMutation = useDeleteTurno();
+  const { confirm, confirmDialog } = useConfirmDialog();
 
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
@@ -51,11 +53,11 @@ export const TurnosPage = () => {
   };
 
   const handleDelete = (item: Turno) => {
-    if (!window.confirm(`¿Eliminar el turno "${item.nombre}"?`)) {
-      return;
-    }
-
-    deleteMutation.mutate(item.id);
+    confirm({
+      title: "Eliminar turno",
+      message: `¿Eliminar el turno "${item.nombre}"? Esta acción no se puede deshacer.`,
+      onConfirm: () => deleteMutation.mutate(item.id),
+    });
   };
 
   const handleFormSubmit = async (payload: TurnoCreateInput) => {
@@ -79,9 +81,10 @@ export const TurnosPage = () => {
 
   return (
     <section>
+      {confirmDialog}
       <PageHeader
         title="Turnos"
-        subtitle="Horarios de trabajo del personal."
+        subtitle="Define los horarios de servicio y la disponibilidad del equipo."
         actions={
           <Button variant="primary" onClick={openCreate}>
             <Plus className="h-4 w-4" />

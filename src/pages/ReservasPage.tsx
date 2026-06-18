@@ -22,6 +22,7 @@ import { TableToolbar } from "@/shared/components/layout/TableToolbar";
 import { Button } from "@/shared/components/ui/Button";
 import { getApiErrorMessage } from "@/shared/utils/apiError";
 import { filterBySearch } from "@/shared/utils/filterBySearch";
+import { useConfirmDialog } from "@/shared/hooks/useConfirmDialog";
 
 /** Vista del modulo Reservas con CRUD completo. */
 export const ReservasPage = () => {
@@ -29,6 +30,7 @@ export const ReservasPage = () => {
   const createMutation = useCreateReserva();
   const updateMutation = useUpdateReserva();
   const deleteMutation = useDeleteReserva();
+  const { confirm, confirmDialog } = useConfirmDialog();
 
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
@@ -60,11 +62,11 @@ export const ReservasPage = () => {
   };
 
   const handleDelete = (item: Reserva) => {
-    if (!window.confirm(`¿Eliminar la reserva #${item.id}?`)) {
-      return;
-    }
-
-    deleteMutation.mutate(item.id);
+    confirm({
+      title: "Eliminar reserva",
+      message: `¿Eliminar la reserva #${item.id}? Esta acción no se puede deshacer.`,
+      onConfirm: () => deleteMutation.mutate(item.id),
+    });
   };
 
   const handleFormSubmit = async (payload: ReservaCreateInput) => {
@@ -88,9 +90,10 @@ export const ReservasPage = () => {
 
   return (
     <section>
+      {confirmDialog}
       <PageHeader
         title="Reservas"
-        subtitle="Gestion de reservas del restaurante."
+        subtitle="Planifica y da seguimiento a las reservaciones del día y próximos turnos."
         actions={
           <Button variant="primary" onClick={openCreate}>
             <Plus className="h-4 w-4" />

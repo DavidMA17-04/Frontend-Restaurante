@@ -22,6 +22,7 @@ import { TableToolbar } from "@/shared/components/layout/TableToolbar";
 import { Button } from "@/shared/components/ui/Button";
 import { getApiErrorMessage } from "@/shared/utils/apiError";
 import { filterBySearch } from "@/shared/utils/filterBySearch";
+import { useConfirmDialog } from "@/shared/hooks/useConfirmDialog";
 
 /** Vista del modulo Bloqueos de Mesa con CRUD alineado al backend. */
 export const BloqueosMesaPage = () => {
@@ -29,6 +30,7 @@ export const BloqueosMesaPage = () => {
   const createMutation = useCreateBloqueoMesa();
   const updateMutation = useUpdateBloqueoMesa();
   const deleteMutation = useDeleteBloqueoMesa();
+  const { confirm, confirmDialog } = useConfirmDialog();
 
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
@@ -54,15 +56,12 @@ export const BloqueosMesaPage = () => {
   };
 
   const handleDelete = (item: BloqueoMesa) => {
-    if (
-      !window.confirm(
-        `¿Desbloquear la mesa #${item.mesaId}? Se eliminaran sus bloqueos.`,
-      )
-    ) {
-      return;
-    }
-
-    deleteMutation.mutate(item.mesaId);
+    confirm({
+      title: "Desbloquear mesa",
+      message: `¿Desbloquear la mesa #${item.mesaId}? Se eliminarán sus bloqueos registrados.`,
+      confirmLabel: "Desbloquear",
+      onConfirm: () => deleteMutation.mutate(item.mesaId),
+    });
   };
 
   const handleFormSubmit = async (payload: BloqueoMesaCreateInput) => {
@@ -89,9 +88,10 @@ export const BloqueosMesaPage = () => {
 
   return (
     <section>
+      {confirmDialog}
       <PageHeader
         title="Bloqueos de mesa"
-        subtitle="Bloqueos temporales por mantenimiento o eventos."
+        subtitle="Registra mesas fuera de servicio por mantenimiento, eventos o cierres temporales."
         actions={
           <Button variant="primary" onClick={openCreate}>
             <Plus className="h-4 w-4" />

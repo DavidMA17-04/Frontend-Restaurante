@@ -60,7 +60,7 @@ export const ZonaMapView = () => {
             <ZonaMapSummary zonasMap={zonasMap} />
           </PageSectionCard>
 
-          <PageSectionCard title="Plano del salon">
+          <PageSectionCard title="Plano del salon" className="overflow-visible">
             <ZonaFloorPlan zonasMap={zonasMap} />
           </PageSectionCard>
         </>

@@ -1,3 +1,4 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createCrudMutations } from "@/shared/hooks/createCrudMutations";
 import { QUERY_KEYS } from "@/shared/constants/queryKeyConstants";
 import { createMesa, deleteMesa, updateMesa } from "../services/mesaService";
@@ -20,4 +21,16 @@ const mutations = createCrudMutations<
 
 export const useCreateMesa = mutations.useCreate;
 export const useUpdateMesa = mutations.useUpdate;
-export const useDeleteMesa = mutations.useDelete;
+
+export const useDeleteMesa = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteMesa,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.mesas] });
+      void queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.reservas] });
+      void queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.bloqueosMesa] });
+    },
+  });
+};

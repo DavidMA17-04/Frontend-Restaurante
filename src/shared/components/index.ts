@@ -2,6 +2,7 @@ export { Button, Input, AppLink, Card } from "./ui/Index";
 export { Badge } from "./ui/Badge";
 export type { BadgeVariant } from "./ui/Badge";
 export { Modal } from "./ui/Modal";
+export { ConfirmDialog } from "./ui/ConfirmDialog";
 export { SearchInput } from "./ui/SearchInput";
 export { FormInput, FormSelect } from "./forms";
 export type { SelectOption } from "./forms";

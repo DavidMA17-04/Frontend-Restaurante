@@ -25,7 +25,7 @@ export type NavIconKey =
   | "ban"
   | "list";
 
-/** Elementos de navegacion mostrados en el Sidebar y tarjetas del Home. */
+/** Elementos de navegacion mostrados en el Navbar y tarjetas del Home. */
 export const NAV_ITEMS = [
   {
     label: "Inicio",

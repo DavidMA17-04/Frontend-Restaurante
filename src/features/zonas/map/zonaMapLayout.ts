@@ -24,14 +24,14 @@ export const MESA_POSITIONS_BY_ZONA: Record<
   Record<number, MesaPosition>
 > = {
   1: {
-    1: { x: 28, y: 32 },
-    2: { x: 72, y: 32 },
+    1: { x: 28, y: 38 },
+    2: { x: 72, y: 38 },
     5: { x: 28, y: 72 },
     6: { x: 72, y: 72 },
   },
   2: {
-    3: { x: 32, y: 50 },
-    7: { x: 68, y: 50 },
+    3: { x: 32, y: 55 },
+    7: { x: 68, y: 55 },
   },
   3: {
     4: { x: 22, y: 50 },

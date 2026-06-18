@@ -22,6 +22,7 @@ import { TableToolbar } from "@/shared/components/layout/TableToolbar";
 import { Button } from "@/shared/components/ui/Button";
 import { getApiErrorMessage } from "@/shared/utils/apiError";
 import { filterBySearch } from "@/shared/utils/filterBySearch";
+import { useConfirmDialog } from "@/shared/hooks/useConfirmDialog";
 
 /** Vista del modulo Clientes con CRUD completo. */
 export const ClientesPage = () => {
@@ -29,6 +30,7 @@ export const ClientesPage = () => {
   const createMutation = useCreateCliente();
   const updateMutation = useUpdateCliente();
   const deleteMutation = useDeleteCliente();
+  const { confirm, confirmDialog } = useConfirmDialog();
 
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
@@ -60,11 +62,11 @@ export const ClientesPage = () => {
   };
 
   const handleDelete = (item: Cliente) => {
-    if (!window.confirm(`¿Eliminar al cliente "${item.nombre}"?`)) {
-      return;
-    }
-
-    deleteMutation.mutate(item.id);
+    confirm({
+      title: "Eliminar cliente",
+      message: `¿Eliminar al cliente "${item.nombre}"? Esta acción no se puede deshacer.`,
+      onConfirm: () => deleteMutation.mutate(item.id),
+    });
   };
 
   const handleFormSubmit = async (payload: ClienteCreateInput) => {
@@ -88,9 +90,10 @@ export const ClientesPage = () => {
 
   return (
     <section>
+      {confirmDialog}
       <PageHeader
         title="Clientes"
-        subtitle="Listado de clientes del restaurante. CRUD funcional con datos mock o API segun VITE_USE_MOCK."
+        subtitle="Administra la información de los comensales y su historial en el restaurante."
         actions={
           <Button variant="primary" onClick={openCreate}>
             <Plus className="h-4 w-4" />

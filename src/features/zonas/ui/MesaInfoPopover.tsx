@@ -7,6 +7,7 @@ interface MesaInfoPopoverProps {
   capacidad: number;
   estado: MesaEstadoDetalle;
   className?: string;
+  variant?: "tooltip" | "panel";
 }
 
 const estadoBadgeVariant = (tipo: MesaEstadoDetalle["tipo"]) => {
@@ -29,20 +30,26 @@ const estadoLabel = (tipo: MesaEstadoDetalle["tipo"]) => {
   return "Bloqueada";
 };
 
-/** Mini carta flotante con detalle de mesa. */
+/** Carta con detalle de mesa (panel lateral o tooltip). */
 export const MesaInfoPopover = ({
   numero,
   capacidad,
   estado,
   className,
+  variant = "tooltip",
 }: MesaInfoPopoverProps) => {
+  const isPanel = variant === "panel";
+
   return (
     <div
       className={cn(
-        "pointer-events-none z-50 min-w-[200px] border border-brand-500/30 bg-surface-elevated p-3 shadow-lg",
+        isPanel
+          ? "w-full"
+          : "pointer-events-none z-50 min-w-[200px] border border-brand-500/30 bg-surface-elevated p-3 shadow-lg",
         className,
       )}
-      role="tooltip"
+      role={isPanel ? "region" : "tooltip"}
+      aria-label={isPanel ? `Detalle mesa ${numero}` : undefined}
     >
       <p className="font-serif text-base text-foreground">Mesa {numero}</p>
       <p className="mt-1 text-xs text-muted">

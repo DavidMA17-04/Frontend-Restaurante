@@ -20,6 +20,13 @@
   --color-foreground: #1c1917;
   --color-muted: #78716c;
   --color-border: #e7e0d4;
+
+  --color-status-success: #6b8f71;
+  --color-status-success-muted: rgba(107, 143, 113, 0.15);
+  --color-status-warning: #c9a962;
+  --color-status-warning-muted: rgba(201, 169, 98, 0.18);
+  --color-status-danger: #a65d5d;
+  --color-status-danger-muted: rgba(166, 93, 93, 0.15);
 }
 
 .dark {
@@ -33,10 +40,65 @@
   --color-foreground: #ffffff;
   --color-muted: rgba(255, 255, 255, 0.55);
   --color-border: rgba(255, 255, 255, 0.12);
+
+  --color-status-success: #8fad94;
+  --color-status-success-muted: rgba(143, 173, 148, 0.2);
+  --color-status-warning: #d4b978;
+  --color-status-warning-muted: rgba(212, 185, 120, 0.22);
+  --color-status-danger: #c17a7a;
+  --color-status-danger-muted: rgba(193, 122, 122, 0.2);
 }
 
 @layer base {
   body {
     @apply bg-bg font-sans text-foreground antialiased;
+  }
+
+  input[type="date"],
+  input[type="time"],
+  input[type="datetime-local"],
+  .date-time-input {
+    color-scheme: light;
+  }
+
+  .dark input[type="date"],
+  .dark input[type="time"],
+  .dark input[type="datetime-local"],
+  .dark .date-time-input {
+    color-scheme: dark;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+  .date-time-input::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.72;
+    filter: brightness(0) saturate(100%);
+  }
+
+  .dark input[type="date"]::-webkit-calendar-picker-indicator,
+  .dark input[type="time"]::-webkit-calendar-picker-indicator,
+  .dark input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+  .dark .date-time-input::-webkit-calendar-picker-indicator {
+    opacity: 0.88;
+    filter: brightness(0) invert(1);
+  }
+}
+
+@keyframes search-placeholder-scroll {
+  0%,
+  12% {
+    transform: translateX(0);
+  }
+  88%,
+  100% {
+    transform: translateX(var(--placeholder-scroll-end, 0));
+  }
+}
+
+@layer utilities {
+  .search-placeholder-marquee {
+    animation: search-placeholder-scroll 7s ease-in-out infinite;
   }
 }

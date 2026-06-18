@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import {
   ListaEsperaFormModal,
   ListaEsperaTablePlaceholder,
+  PromoverListaEsperaModal,
   useCreateListaEspera,
   useGetListaEspera,
   usePromoverListaEspera,
@@ -33,6 +34,7 @@ export const ListaEsperaPage = () => {
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<ListaEspera | null>(null);
+  const [promoverItem, setPromoverItem] = useState<ListaEspera | null>(null);
 
   const filteredData = useMemo(
     () => filterBySearch(data ?? [], search, ["clienteId", "fecha", "cantidad"]),
@@ -54,18 +56,29 @@ export const ListaEsperaPage = () => {
   };
 
   const handlePromover = (item: ListaEspera) => {
-    const mesaId = window.prompt(
-      `Ingresa el ID de la mesa para promover la entrada #${item.id}:`,
-    );
+    setPromoverItem(item);
+  };
 
-    if (!mesaId) {
+  const closePromoverModal = () => {
+    if (!promoverMutation.isPending) {
+      setPromoverItem(null);
+    }
+  };
+
+  const handleConfirmPromover = (mesaId: number) => {
+    if (!promoverItem) {
       return;
     }
 
-    promoverMutation.mutate({
-      listaEsperaId: item.id,
-      mesaId: Number(mesaId),
-    });
+    promoverMutation.mutate(
+      {
+        listaEsperaId: promoverItem.id,
+        mesaId,
+      },
+      {
+        onSuccess: () => setPromoverItem(null),
+      },
+    );
   };
 
   const handleFormSubmit = async (payload: ListaEsperaCreateInput) => {
@@ -94,7 +107,7 @@ export const ListaEsperaPage = () => {
     <section>
       <PageHeader
         title="Lista de espera"
-        subtitle="Clientes en espera de mesa disponible."
+        subtitle="Atiende a comensales sin mesa asignada hasta que haya disponibilidad."
         actions={
           <Button variant="primary" onClick={openCreate}>
             <Plus className="h-4 w-4" />
@@ -142,6 +155,14 @@ export const ListaEsperaPage = () => {
         onClose={closeModal}
         onSubmit={handleFormSubmit}
         isSubmitting={isSaving}
+      />
+
+      <PromoverListaEsperaModal
+        open={promoverItem !== null}
+        item={promoverItem}
+        onClose={closePromoverModal}
+        onConfirm={handleConfirmPromover}
+        isSubmitting={promoverMutation.isPending}
       />
     </section>
   );

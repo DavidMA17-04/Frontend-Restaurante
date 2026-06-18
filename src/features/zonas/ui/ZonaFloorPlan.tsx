@@ -22,6 +22,7 @@ export const ZonaFloorPlan = ({ zonasMap }: ZonaFloorPlanProps) => {
         !containerRef.current.contains(event.target as Node)
       ) {
         setPinnedMesaId(null);
+        setHoveredMesaId(null);
       }
     };
 
@@ -36,17 +37,18 @@ export const ZonaFloorPlan = ({ zonasMap }: ZonaFloorPlanProps) => {
   return (
     <div
       ref={containerRef}
-      className="relative min-h-[520px] overflow-x-auto rounded-sm border border-border bg-surface-muted p-4"
+      className="relative min-h-[520px] overflow-visible rounded-sm border border-border bg-surface-muted p-4 pt-6"
     >
-      <div className="relative mx-auto aspect-[16/10] min-w-[640px]">
+      <div className="relative mx-auto aspect-[16/10] min-w-[640px] overflow-visible">
         {zonasMap.map(({ zona, mesas, totalMesas, totalSillas }) => {
-          const area = ZONA_AREAS[zona.id] ?? { x: 5, y: 5, width: 40, height: 40 };
+          const area =
+            ZONA_AREAS[zona.id] ?? { x: 5, y: 5, width: 40, height: 40 };
 
           return (
             <div
               key={zona.id}
               className={cn(
-                "absolute rounded-sm border-2 border-brand-500/40 bg-surface/80 p-2 backdrop-blur-sm dark:bg-surface/60",
+                "absolute overflow-visible rounded-sm border-2 border-brand-500/40 bg-surface/80 p-2 backdrop-blur-sm dark:bg-surface/60",
                 !zona.disponibilidad && "opacity-60 saturate-50",
               )}
               style={{
@@ -57,13 +59,15 @@ export const ZonaFloorPlan = ({ zonasMap }: ZonaFloorPlanProps) => {
               }}
             >
               <div className="flex items-start justify-between gap-2 px-1">
-                <h3 className="font-serif text-sm text-foreground">{zona.nombre}</h3>
+                <h3 className="font-serif text-sm text-foreground">
+                  {zona.nombre}
+                </h3>
                 <Badge variant={zona.disponibilidad ? "neutral" : "danger"}>
                   {totalMesas} mesas · {totalSillas} sillas
                 </Badge>
               </div>
 
-              <div className="relative h-[calc(100%-2.5rem)] w-full px-2 pt-3">
+              <div className="relative h-[calc(100%-2.5rem)] w-full overflow-visible px-2 pt-16">
                 {mesas.map((mesa) => {
                   const relativePos = {
                     x: ((mesa.posicion.x - area.x) / area.width) * 100,

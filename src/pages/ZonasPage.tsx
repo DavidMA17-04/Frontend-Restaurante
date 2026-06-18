@@ -21,6 +21,7 @@ import { Button } from "@/shared/components/ui/Button";
 import { getApiErrorMessage } from "@/shared/utils/apiError";
 import { cn } from "@/shared/utils/cn";
 import { filterBySearch } from "@/shared/utils/filterBySearch";
+import { useConfirmDialog } from "@/shared/hooks/useConfirmDialog";
 
 type ViewMode = "listado" | "mapa";
 
@@ -30,6 +31,7 @@ export const ZonasPage = () => {
   const createMutation = useCreateZona();
   const updateMutation = useUpdateZona();
   const deleteMutation = useDeleteZona();
+  const { confirm, confirmDialog } = useConfirmDialog();
 
   const [viewMode, setViewMode] = useState<ViewMode>("listado");
   const [search, setSearch] = useState("");
@@ -56,11 +58,11 @@ export const ZonasPage = () => {
   };
 
   const handleDelete = (item: Zona) => {
-    if (!window.confirm(`¿Eliminar la zona "${item.nombre}"?`)) {
-      return;
-    }
-
-    deleteMutation.mutate(item.id);
+    confirm({
+      title: "Eliminar zona",
+      message: `¿Eliminar la zona "${item.nombre}"? Esta acción no se puede deshacer.`,
+      onConfirm: () => deleteMutation.mutate(item.id),
+    });
   };
 
   const handleFormSubmit = async (payload: ZonaCreateInput) => {
@@ -84,9 +86,10 @@ export const ZonasPage = () => {
 
   return (
     <section>
+      {confirmDialog}
       <PageHeader
         title="Zonas"
-        subtitle="Areas del restaurante (terraza, salon, etc.)."
+        subtitle="Organiza y consulta la distribución del salón: terraza, VIP, interior y más."
         actions={
           viewMode === "listado" ? (
             <Button variant="primary" onClick={openCreate}>

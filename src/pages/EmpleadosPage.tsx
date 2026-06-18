@@ -23,12 +23,14 @@ import { Button } from "@/shared/components/ui/Button";
 import { env } from "@/config/env";
 import { getApiErrorMessage } from "@/shared/utils/apiError";
 import { filterBySearch } from "@/shared/utils/filterBySearch";
+import { useConfirmDialog } from "@/shared/hooks/useConfirmDialog";
 
 export const EmpleadosPage = () => {
   const { data, isLoading, isError } = useGetEmpleados();
   const createMutation = useCreateEmpleado();
   const updateMutation = useUpdateEmpleado();
   const deleteMutation = useDeleteEmpleado();
+  const { confirm, confirmDialog } = useConfirmDialog();
 
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
@@ -54,11 +56,11 @@ export const EmpleadosPage = () => {
   };
 
   const handleDelete = (item: Empleado) => {
-    if (!window.confirm(`¿Eliminar al empleado "${item.nombre}"?`)) {
-      return;
-    }
-
-    deleteMutation.mutate(item.id);
+    confirm({
+      title: "Eliminar empleado",
+      message: `¿Eliminar al empleado "${item.nombre}"? Esta acción no se puede deshacer.`,
+      onConfirm: () => deleteMutation.mutate(item.id),
+    });
   };
 
   const handleFormSubmit = async (payload: EmpleadoCreateInput) => {
@@ -82,9 +84,10 @@ export const EmpleadosPage = () => {
 
   return (
     <section>
+      {confirmDialog}
       <PageHeader
         title="Empleados"
-        subtitle="Listado del personal del restaurante."
+        subtitle="Gestiona el personal que atiende el salón y apoya la operación diaria."
         actions={
           <Button variant="primary" onClick={openCreate}>
             <Plus className="h-4 w-4" />

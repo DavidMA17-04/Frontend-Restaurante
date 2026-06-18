@@ -30,7 +30,9 @@ export const PageHeader = ({
       )}
     >
       <div className={cn(isCentered && "mx-auto")}>
-        <p className="font-serif text-sm italic text-brand-600 dark:text-brand-500">{category}</p>
+        <p className="font-serif text-sm italic text-brand-600 dark:text-brand-500">
+          {category}
+        </p>
         <h1 className="mt-2 font-serif text-3xl uppercase tracking-wide text-foreground md:text-5xl">
           {title}
         </h1>
